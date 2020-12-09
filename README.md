@@ -1,2 +1,7 @@
-# nlw2-rest-api
-Repository to store the code for a restful API with the concepts of the backend created on the NLW2 week course
+# Introduction
+This repository was made to store all the code built while studying NodeJS. Each project will have it's own directory.
+
+## Techs
+- NodeJS
+- Typescript
+- Javascript
