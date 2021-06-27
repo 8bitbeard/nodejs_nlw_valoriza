@@ -1,0 +1,435 @@
+swagger: "2.0"
+info:
+  description: "This is the swagger for the `NLW Valoriza`, an API built on the Next Level Week #06 event. Here you will find all the endpoints created on the mini course, and new ones, added on a improovement of the API"
+  version: "1.0.0"
+  title: "NLW Valoriza"
+host: "localhost:3000"
+basePath: "/v1"
+tags:
+- name: "Authentication"
+  description: "NLW Valoriza authentication operations"
+- name: "Users"
+  description: "NLW Valoriza user operations."
+- name: "Tags"
+  description: "NLW Valoriza tag operations"
+- name: "Compliments"
+  description: "NLW Valoriza compliment operations"
+schemes:
+- "https"
+- "http"
+paths:
+  /login:
+    post:
+      tags:
+      - "Authentication"
+      summary: "Authenticate a user"
+      description: "Authenticate users"
+      operationId: "authenticateUsers"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User credentials object"
+        required: true
+        schema:
+          $ref: "#/definitions/Login"
+      responses:
+        default:
+          description: "successful operation"
+  /user:
+    post:
+      tags:
+      - "Users"
+      summary: "Create a new user"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+    put:
+      tags:
+      - "Users"
+      summary: "Update a user"
+      description: "This can only be done by a logged in Admin user."
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: 'Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**'
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/UserEdit"
+      responses:
+        default:
+          description: "successful operation"
+    get:
+      tags:
+      - "Users"
+      summary: "List all users"
+      description: "This can only be done by the logged in user."
+      operationId: "listUsers"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: 'Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**'
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /users/{userId}:
+    delete:
+      tags:
+      - "Users"
+      summary: "Update a user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: 'Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**'
+        required: true
+        type: "string"
+      - in: "path"
+        name: "userId"
+        description: "Ex: b14f4379-1293-44fd-ad14-5de85bedd535"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /users/compliments/send:
+    get:
+      tags:
+      - "Users"
+      summary: "List all sent compliments from user"
+      description: "This can only be done by the logged in user."
+      operationId: "listUserSentCompliments"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SendReceiveCompliments"
+  /users/compliments/receive:
+    get:
+      tags:
+      - "Users"
+      summary: "List all recived compliments from user"
+      description: "This can only be done by the logged in user."
+      operationId: "listUserReceiveCompliments"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SendReceiveCompliments"
+  /users/password:
+    patch:
+      tags:
+      - "Users"
+      summary: "Update logged in user password"
+      description: "This can only be done by the logged in user."
+      operationId: "UpdateUserPassword"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/PasswordEdit"
+      responses:
+        default:
+          description: "successful operation"
+  /tags:
+    post:
+      tags:
+      - "Tags"
+      summary: "Create a new tag"
+      description: "This can only be done by the logged in user."
+      operationId: "createTag"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "New tag object"
+        required: true
+        schema:
+          $ref: "#/definitions/Tag"
+      responses:
+        default:
+          description: "successful operation"
+    get:
+      tags:
+      - "Tags"
+      summary: "List all tags"
+      description: "This can only be done by the logged in user."
+      operationId: "listTag"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ListTags"
+  /compliments:
+    post:
+      tags:
+      - "Compliments"
+      summary: "Create a new compliment"
+      description: "This can only be done by the logged in user."
+      operationId: "createCompliment"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "New tag object"
+        required: true
+        schema:
+          $ref: "#/definitions/Compliments"
+      responses:
+        default:
+          description: "successful operation"
+  /compliments/{complimentId}:
+    delete:
+      tags:
+      - "Compliments"
+      summary: "Create a new tag"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteCompliment"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "complimentId"
+        description: "A compliment ID. Ex: 2234537c-a01b-4ceb-b3b6-65cb825190f1"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+definitions:
+  Login:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "example@example.com"
+      password:
+        type: "string"
+        example: "1234"
+    xml:
+      name: "Login"
+  User:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Example"
+      email:
+        type: "string"
+        example: "example@example.com"
+      password:
+        type: "string"
+        example: "1234"
+      admin:
+        type: "boolean"
+        default: false
+    xml:
+      name: "User"
+  UserEdit:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Example"
+      email:
+        type: "string"
+        example: "example@example.com"
+    xml:
+      name: "UserEdit"
+  UserList:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "b14f4379-1293-44fd-ad14-5de85bedd535"
+      name:
+        type: "string"
+        example: "Victoria"
+      email:
+        type: "string"
+        example: "example@example.com"
+      admin:
+        type: "boolean"
+        example: true
+      password:
+        type: "string"
+        example: "$2a$08$xmUJREXZ7ubkXK0oXxKZPegvxp9uVW6TaskJ8I.CJuuDgroA8G83m"
+      created_at:
+        type: "string"
+        default: "2021-06-24T09:23:31.000Z"
+      updated_at:
+        type: "string"
+        default: "2021-06-24T09:23:31.000Z"
+    xml:
+      name: "User"
+  PasswordEdit:
+    type: "object"
+    properties:
+      password:
+        type: "string"
+        example: "2345"
+    xml:
+      name: "PaswwordEdit"
+  Tag:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Optimistic"
+    xml:
+      name: "Tag"
+  ListTags:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "5cd0f878-917a-4335-9322-2bbd5b665f64"
+      name:
+        type: "string"
+        example: "Optimistic"
+      created_at:
+        type: "string"
+        example: "2021-06-23T09:31:50.000Z"
+      updated_at:
+        type: "string"
+        example: "2021-06-23T09:31:50.000Z"
+      name_custom:
+        type: "string"
+        example: "#optimistic"
+    xml:
+      name: "Tag"
+  Compliments:
+    type: "object"
+    properties:
+      tag_id:
+        type: "string"
+        example: "774ce373-3e02-47d4-b465-6c3c93484eb5"
+      user_receiver:
+        type: "string"
+        example: "774ce373-3e02-47d4-b465-6c3c93484eb5"
+      message:
+        type: "string"
+        example: "You are fenomenal!"
+    xml:
+      name: "Compliments"
+  SendReceiveCompliments:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "774ce373-3e02-47d4-b465-6c3c93484eb5"
+      user_sender:
+        type: "string"
+        example: "774ce373-3e02-47d4-b465-6c3c93484eb5"
+      user_receiver:
+        type: "string"
+        example: "774ce373-3e02-47d4-b465-6c3c93484eb5"
+      tag_id:
+        type: "string"
+        example: "774ce373-3e02-47d4-b465-6c3c93484eb5"
+      message:
+        type: "string"
+        example: "You are fenomenal!"
+      created_at:
+        type: "string"
+        example: "You are fenomenal!"
+      userSender:
+        $ref: "#/definitions/UserList"
+      userReceiver:
+        $ref: "#/definitions/UserList"
+      tag:
+        $ref: "#/definitions/ListTags"
+    xml:
+      name: "Compliments"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
