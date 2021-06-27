@@ -22,7 +22,7 @@
 ## Documentação da API:
 
 É possível consultar a documentação da API no swagger hospedado no github, através do github-pages
-Link: https://8bitbeard.github.io/nlw-together/nlwValoriza/#/
+Link: https://8bitbeard.github.io/nodejs/next_level_week_6/#/
 
 ## Regras de Negócio
 
