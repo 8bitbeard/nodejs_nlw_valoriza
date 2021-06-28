@@ -15,10 +15,20 @@ class UsersController {
 
     async index(request: Request, response: Response) {
         const usersService = new UsersService();
+        const name = request.query.name as any
+        const email = request.query.email as any
 
-        const users = await usersService.index();
+        const users = await usersService.index({
+            name,
+            email
+        });
 
-        return response.json(users);
+        if(users.length > 0) {
+            return response.status(200).json(users);
+        } else {
+            return response.status(404).json({code: "NOT_FOUND", message: "No users found", details: ["No users found"]});
+        }
+
     }
 
     async search(request: Request, response: Response) {

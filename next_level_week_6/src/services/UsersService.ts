@@ -23,8 +23,8 @@ interface IUserPassword {
 }
 
 interface ISearchUser {
-    name: string,
-    email: string
+    name?: string,
+    email?: string
 }
 class UsersService {
     async create({name, email, admin = false, password} : IUserRequest) {
@@ -56,10 +56,15 @@ class UsersService {
           return user;
     }
 
-    async index() {
+    async index({name, email}: ISearchUser) {
         const usersRepositories = getCustomRepository(UsersRepositories);
 
-        const users = await usersRepositories.find();
+        const userData: ISearchUser = new Object();
+
+        if(name) { userData.name = name }
+        if(email) { userData.email = email }
+
+        const users = await usersRepositories.find(userData);
 
         return classToPlain(users);
     }
