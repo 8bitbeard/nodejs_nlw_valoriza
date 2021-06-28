@@ -11,6 +11,7 @@ import { DeleteComplimentController } from "./controllers/DeleteComplimentContro
 import { UpdateUserController } from "./controllers/UpdateUserController";
 import { UpdateUserPasswordController } from "./controllers/UpdateUserPasswordController";
 import { DeleteUserController } from "./controllers/DeleteUserController";
+import { DeleteTagController } from "./controllers/DeleteTagController";
 import { ensureAdmin } from "./middlewares/ensureAdmin";
 import { ensureAuthenticated } from "./middlewares/ensureAuthenticated";
 
@@ -28,7 +29,7 @@ const updateUserPasswordController = new UpdateUserPasswordController()
 const deleteUserController = new DeleteUserController()
 const listTagsController = new ListTagsController()
 const listUsersController = new ListUsersController()
-
+const deleteTagController = new DeleteTagController()
 
 // Authentication
 router.post("/login", authenticateUserController.handle)
@@ -45,6 +46,7 @@ router.patch("/users/password", ensureAuthenticated, updateUserPasswordControlle
 // Tags
 router.post("/tags", ensureAuthenticated, ensureAdmin, createTagController.handle);
 router.get("/tags", ensureAuthenticated, listTagsController.handle);
+router.delete("/tags/:id", ensureAuthenticated, ensureAdmin, deleteTagController.handle);
 
 // Compliments
 router.post("/compliments", ensureAuthenticated, createComplimentController.handle)
