@@ -66,25 +66,23 @@ document.querySelector("#start_chat").addEventListener("click", (event) => {
   });
 });
 
-document
-  .querySelector("#send_message_button")
-  .addEventListener("click", (event) => {
-    const text = document.getElementById("message_user");
+document.querySelector("#send_message_button").addEventListener("click", (event) => {
+  const text = document.getElementById("message_user");
 
-    const params = {
-      text: text.value,
-      socket_admin_id,
-    };
+  const params = {
+    text: text.value,
+    socket_admin_id,
+  };
 
-    socket.emit("client_send_to_admin", params);
+  socket.emit("client_send_to_admin", params);
 
-    const template_client = document.getElementById("message-user-template")
-      .innerHTML;
+  const template_client = document.getElementById("message-user-template")
+    .innerHTML;
 
-    const rendered = Mustache.render(template_client, {
-      message: text.value,
-      email: emailUser,
-    });
-
-    document.getElementById("messages").innerHTML += rendered;
+  const rendered = Mustache.render(template_client, {
+    message: text.value,
+    email: emailUser,
   });
+
+  document.getElementById("messages").innerHTML += rendered;
+});
