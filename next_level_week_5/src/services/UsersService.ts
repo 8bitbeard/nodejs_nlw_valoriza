@@ -35,7 +35,6 @@ class UsersService {
 
     return user;
   }
-
 }
 
 export { UsersService };
