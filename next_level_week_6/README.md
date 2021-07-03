@@ -1,58 +1,66 @@
 # NLW Valoriza
+## 🚀 Techs used in this Project:
 
-## Introdução
+- [Node.js](https://nodejs.org/en/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Typeorm](https://typeorm.io/#/)
+- [Express](https://expressjs.com/)
 
-- Este projeto foi desenvolvido na semana da Next Level Week #06. Se trata de uma API para criação de Elogios a usuários de uma determinada empresa. Com ela, é possível:
-  - Realizar login com usuários cadastrados
-  - Adicionar usuários
-  - Editar dados dos usuários
-  - Editar senha dos usuários
-  - Excluir usuários
-  - Cadastrar `TAGS` para armazenar comentários de elogio
-  - Remover tags
-  - Cadastrar elogios para usuários, que devem ser linkados a uma tag
-  - Remover elogios
+## 💻 Introduction
 
-## Tecnologias usadas:
-- NodeJS
-- Typescript
-- Express
-- Typeorm
-
-## Documentação da API:
-
-É possível consultar a documentação da API no swagger hospedado no github, através do github-pages
-Link: https://8bitbeard.github.io/nodejs/next_level_week_6/#/
-
-## Regras de Negócio
-
-- Cadastro de usuário
-  - :heavy_check_mark: Não é permitido cadastrar mais de um usuário com o mesmo e-mail
-  - :heavy_check_mark: Não é permitido cadastrar usuário sem e-mail
-
-- Cadastro de TAG
-  - :heavy_check_mark: Não é permitido cadastrar mais de uma tag com o mesmo nome
-  - :heavy_check_mark: Não é permitido cadastrar TAG sem nome
-  - :heavy_check_mark: Não é permitido o cadastro por usuários que não sejam administradores
-
-- Cadastro de elogios
-  - :heavy_check_mark: Não é permitido um usuário cadastrar um elogio para sí
-  - :heavy_check_mark: Não é permitido cadastrar elogios para usuários inválidos
-  - :heavy_check_mark: O usuário precisa estar autenticado na aplicação
-
-- Alteração de senha
-  - :heavy_check_mark: Não é permitido alterar a senha sem estar autenticado
-  - :heavy_check_mark: O usuário só poderá alterar a própria senha
-  - A senha cadastrada deve ser composta por somente 4 números
-
-- Alteração dos dados de um usuário
-  - :heavy_check_mark: Somente um usuário administrador pode realizar a alteração dos dados de um usuário
-
-- Exclusão de usuários
-  - :heavy_check_mark: Somente um usuário administrador pode realizar a exclusão de outro usuário
-  - :heavy_check_mark: Um usuário não pode se auto excluir
+- This project was developed in the `Next Level Week 06` event. In this event, we built a API to create and send compliments to users of a given Company. This api is capable of:
+  - Create `USERS`
+  - Edit user data
+  - Edit user password
+  - Log in with registered users
+  - Delete `USERS` from database
+  - create `TAGS` to store all the compliments made from users
+  - Delete `TAGS` and all the compliments from this tag
+  - Create `COMPLIMENTS` to users, which have to be linked to a given `TAG`
+  - Delete `COMPLIMENTS`
 
 
-## Diagrama de Tabelas do Banco de Dados:
+## API Documentation:
 
-![Diagrama de Tabelas](./images/table_diagram.png)
+- You can check all the API documentation on the following link: https://8bitbeard.github.io/nodejs/next_level_week_6/#/
+  - This link was hosted on github-pages, following the awesome tutorial from this repository: https://github.com/peter-evans/swagger-github-pages
+
+## Business Rules
+
+- User Register
+  - :heavy_check_mark: It is not allowed to create more than one user with the same e-mail adress
+  - :heavy_check_mark: It is not allowed to create a user without a e-mail
+  - :heavy_check_mark: It is not allowed to create a user without a name
+  - It is not allowed to create a user without a password
+  - The password can only contain numbers
+  - The password must have a size of 4 numbers
+
+- Tag Creation
+  - :heavy_check_mark: It iw not allowed to create more than one tag with the same name
+  - :heavy_check_mark: It is not allowed to create a tag without a name
+  - :heavy_check_mark: Tags can only be created by a admin user
+  - :heavy_check_mark: It is necessary to log in on the application to create tags
+  - Tags can only have 50 chars max
+
+- Compliments Creation
+  - :heavy_check_mark: A user can not create a compliment to himself
+  - :heavy_check_mark: It is not allowed to create compliments to invalid/inexistent users
+  - :heavy_check_mark: It is necessary to log in on the application to create compliments
+
+- Password Reset
+  - :heavy_check_mark: It is necessary to log in on the application to reset the password
+  - :heavy_check_mark: A user can only change his password
+  - The password can only contain numbers
+  - The password must have a size of 4 numbers
+
+- User Data Update
+  - :heavy_check_mark: Only a admin user can update a user data
+  - A admin can change his own data
+
+- Delete User
+  - :heavy_check_mark: Only a admin user can delete users
+  - A user cant delete himself
+
+## Database table diagram:
+
+![Database table diagram](./images/table_diagram.png)
