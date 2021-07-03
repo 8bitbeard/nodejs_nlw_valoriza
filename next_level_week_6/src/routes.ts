@@ -33,8 +33,9 @@ router.delete("/tags/:id", ensureAuthenticated, ensureAdmin, tagsController.remo
 
 // Compliments
 router.post("/compliments", ensureAuthenticated, complimentsController.create)
-router.get("/compliments", ensureAuthenticated, complimentsController.search)
 router.delete("/compliments/:id", ensureAuthenticated, complimentsController.remove)
+router.get("/compliments/:id/sent", ensureAuthenticated, complimentsController.search)
+router.get("/compliments/:id/recived", ensureAuthenticated, complimentsController.search)
 
 
 export { router }

@@ -93,10 +93,42 @@ paths:
         description: 'Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**'
         required: true
         type: "string"
+      - name: "name"
+        in: "query"
+        description: 'Ex: Adam'
+        required: false
+        type: "string"
+      - name: "email"
+        in: "query"
+        description: 'Ex: adam@example.net'
+        required: false
+        type: "string"
       responses:
         default:
           description: "successful operation"
-  /users/{userId}:
+  /users/{id}:
+    get:
+      tags:
+      - "Users"
+      summary: "Display data from a user"
+      description: "This can only be done by the logged in user."
+      operationId: "displayUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: 'Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**'
+        required: true
+        type: "string"
+      - in: "path"
+        name: "id"
+        description: "Ex: b14f4379-1293-44fd-ad14-5de85bedd535"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
     delete:
       tags:
       - "Users"
@@ -112,61 +144,13 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "userId"
+        name: "id"
         description: "Ex: b14f4379-1293-44fd-ad14-5de85bedd535"
         required: true
         type: "string"
       responses:
         default:
           description: "successful operation"
-  /users/compliments/send:
-    get:
-      tags:
-      - "Users"
-      summary: "List all sent compliments from user"
-      description: "This can only be done by the logged in user."
-      operationId: "listUserSentCompliments"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "Authorization"
-        in: "header"
-        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
-        required: true
-        type: "string"
-      responses:
-        default:
-          description: "successful operation"
-        "200":
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/SendReceiveCompliments"
-  /users/compliments/receive:
-    get:
-      tags:
-      - "Users"
-      summary: "List all recived compliments from user"
-      description: "This can only be done by the logged in user."
-      operationId: "listUserReceiveCompliments"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "Authorization"
-        in: "header"
-        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
-        required: true
-        type: "string"
-      responses:
-        default:
-          description: "successful operation"
-        "200":
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/SendReceiveCompliments"
   /users/password:
     patch:
       tags:
@@ -238,6 +222,29 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/ListTags"
+  /tags{id}:
+    delete:
+      tags:
+      - "Tags"
+      summary: "Create a new tag"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteTag"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "id"
+        description: "Ex: b14f4379-1293-44fd-ad14-5de85bedd535"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
   /compliments:
     post:
       tags:
@@ -262,11 +269,11 @@ paths:
       responses:
         default:
           description: "successful operation"
-  /compliments/{complimentId}:
+  /compliments/{id}:
     delete:
       tags:
       - "Compliments"
-      summary: "Create a new tag"
+      summary: "Delete a compiment"
       description: "This can only be done by the logged in user."
       operationId: "deleteCompliment"
       produces:
@@ -278,7 +285,53 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "complimentId"
+        name: "id"
+        description: "A compliment ID. Ex: 2234537c-a01b-4ceb-b3b6-65cb825190f1"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /compliments/{id}/sent:
+    get:
+      tags:
+      - "Compliments"
+      summary: "List sent compliments by user"
+      description: "This can only be done by the logged in user."
+      operationId: "listSentCompliments"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "id"
+        description: "A compliment ID. Ex: 2234537c-a01b-4ceb-b3b6-65cb825190f1"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /compliments/{id}/recived:
+    get:
+      tags:
+      - "Compliments"
+      summary: "List recived compliments by user"
+      description: "This can only be done by the logged in user."
+      operationId: "listRecivedCompliments"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "id"
         description: "A compliment ID. Ex: 2234537c-a01b-4ceb-b3b6-65cb825190f1"
         required: true
         type: "string"
