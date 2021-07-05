@@ -5,6 +5,7 @@
 - [TypeScript](https://www.typescriptlang.org/)
 - [Typeorm](https://typeorm.io/#/)
 - [Express](https://expressjs.com/)
+- [Jest](https://jestjs.io/)
 
 ## 💻 Introduction
 
@@ -28,12 +29,15 @@
 ## Business Rules
 
 - User Register
-  - :heavy_check_mark: It is not allowed to create more than one user with the same e-mail adress
-  - :heavy_check_mark: It is not allowed to create a user without a e-mail
-  - :heavy_check_mark: It is not allowed to create a user without a name
-  - It is not allowed to create a user without a password
-  - The password can only contain numbers
-  - The password must have a size of 4 numbers
+  - :heavy_check_mark: should be able to create a new admin user (350 ms)
+  - :heavy_check_mark: should be able to create a normal user (115 ms)
+  - :heavy_check_mark: should be able to create a user without the admin parameter (146 ms)
+  - :heavy_check_mark: should not be able to create a user without the email parameter (78 ms)
+  - :heavy_check_mark: should not be able to create a user without the password parameter (80 ms)
+  - :heavy_check_mark: should not be able to create a user with an existing email (133 ms)
+  - :heavy_check_mark: should not be able to create a user with a password with letters or special characters (79 ms)
+  - :heavy_check_mark: should not be able to create a user with a password that has more than 4 digits (71 ms)
+  - :heavy_check_mark: should not be able to create a user with a password that has less than 4 digits
 
 - Tag Creation
   - :heavy_check_mark: It iw not allowed to create more than one tag with the same name

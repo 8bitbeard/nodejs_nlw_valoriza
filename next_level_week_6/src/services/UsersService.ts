@@ -42,6 +42,16 @@ class UsersService {
             throw new Error("User already exists");
           }
 
+          const isNum = /^\d+$/.test(password);
+
+          if(!isNum) {
+            throw new Error("Password must contain only numbers!")
+          }
+
+          if(password.length != 4) {
+            throw new Error("Password size must be equal to 4!")
+          }
+
           const passwordHash = await hash(password, 8)
 
           const user = usersRepositories.create({
