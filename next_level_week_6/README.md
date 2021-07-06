@@ -28,15 +28,22 @@
 
 ## Business Rules
 
+- User Authentication
+  - :heavy_check_mark: should be able to authenticate with a normal user with valid credentials
+  - :heavy_check_mark: should be able to authenticate with a admin user with valid credentials
+  - :heavy_check_mark: should not be able to authenticate with a invalid email adress
+  - :heavy_check_mark: should not be able to authenticate with a invalid admin user password
+  - :heavy_check_mark: should not be able to authenticate with a invalid normal user password
+
 - User Register
-  - :heavy_check_mark: should be able to create a new admin user (350 ms)
-  - :heavy_check_mark: should be able to create a normal user (115 ms)
-  - :heavy_check_mark: should be able to create a user without the admin parameter (146 ms)
-  - :heavy_check_mark: should not be able to create a user without the email parameter (78 ms)
-  - :heavy_check_mark: should not be able to create a user without the password parameter (80 ms)
-  - :heavy_check_mark: should not be able to create a user with an existing email (133 ms)
-  - :heavy_check_mark: should not be able to create a user with a password with letters or special characters (79 ms)
-  - :heavy_check_mark: should not be able to create a user with a password that has more than 4 digits (71 ms)
+  - :heavy_check_mark: should be able to create a new admin user
+  - :heavy_check_mark: should be able to create a normal user
+  - :heavy_check_mark: should be able to create a user without the admin parameter
+  - :heavy_check_mark: should not be able to create a user without the email parameter
+  - :heavy_check_mark: should not be able to create a user without the password paramete
+  - :heavy_check_mark: should not be able to create a user with an existing email
+  - :heavy_check_mark: should not be able to create a user with a password with letters or special character
+  - :heavy_check_mark: should not be able to create a user with a password that has more than 4 digit
   - :heavy_check_mark: should not be able to create a user with a password that has less than 4 digits
 
 - Tag Creation
