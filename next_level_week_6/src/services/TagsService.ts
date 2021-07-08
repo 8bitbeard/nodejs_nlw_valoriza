@@ -12,6 +12,10 @@ class TagsService {
           throw new Error("Incorrect name!");
         }
 
+        if (name.length > 50) {
+          throw new Error("Tag name must have a maximum size of 50 chars!")
+        }
+
         // SELECT * FROM tags WHERE name = 'name'
         const tagAlreadyExists = await tagsRepositories.findOne({
           name
@@ -37,11 +41,6 @@ class TagsService {
 
         return classToPlain(tags);
     }
-
-    async remove() {
-        return true
-    }
-
 }
 
 export { TagsService }

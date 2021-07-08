@@ -45,9 +45,9 @@ class UsersController {
 
         const { id, name, email, admin } = request.body;
 
-        const user = await usersService.edit({id, name, email, admin});
+        await usersService.edit({id, name, email, admin});
 
-        return response.status(200).json(user);
+        return response.status(204).json();
     }
 
     async remove(request: Request, response: Response) {

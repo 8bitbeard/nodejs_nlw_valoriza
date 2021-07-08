@@ -29,7 +29,7 @@ router.patch("/users/password", ensureAuthenticated, usersController.update)
 // Tags
 router.post("/tags", ensureAuthenticated, ensureAdmin, tagsController.create);
 router.get("/tags", ensureAuthenticated, tagsController.search);
-router.delete("/tags/:id", ensureAuthenticated, ensureAdmin, tagsController.remove);
+// router.delete("/tags/:id", ensureAuthenticated, ensureAdmin, tagsController.remove);
 
 // Compliments
 router.post("/compliments", ensureAuthenticated, complimentsController.create)

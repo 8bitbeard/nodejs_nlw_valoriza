@@ -5,7 +5,9 @@ import cors from "cors";
 
 import { router } from "./routes";
 
-import "./database";
+import createConnection from "./database";
+
+createConnection();
 
 const app = express();
 

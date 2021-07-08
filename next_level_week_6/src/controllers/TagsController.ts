@@ -20,11 +20,6 @@ class TagsController {
 
         return response.json(tags);
     }
-
-    async remove(request: Request, response: Response) {
-        return response.status(200).json({"message": "ok"})
-    }
-
 }
 
 export { TagsController }
