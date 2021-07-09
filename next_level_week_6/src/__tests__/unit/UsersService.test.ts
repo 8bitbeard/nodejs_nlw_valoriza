@@ -1,4 +1,4 @@
-import { Repository, RepositoryNotFoundError } from "typeorm";
+import { Repository } from "typeorm";
 import "typeorm/repository/Repository";
 import { getCustomRepository } from "typeorm";
 import { mocked } from 'ts-jest/utils'
