@@ -18,7 +18,7 @@ class TagsController {
 
         const tags = await tagsService.search();
 
-        return response.json(tags);
+        return response.status(200).json(tags);
     }
 }
 
