@@ -8,7 +8,7 @@ class ComplimentsController {
 
         const compliments = await complimentsService.search()
 
-        return response.json(compliments)
+        return response.status(200).json(compliments)
     }
 
     async create(request: Request, response: Response) {
@@ -32,9 +32,9 @@ class ComplimentsController {
         const { id } = request.params;
         const { user_id } = request;
 
-        const compliment = await complimentsService.remove(user_id, id)
+        await complimentsService.remove(user_id, id)
 
-        return response.status(204).json(compliment);
+        return response.status(204);
     }
 
 }
