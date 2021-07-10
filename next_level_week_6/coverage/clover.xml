@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1625774310340" clover="3.2.0">
-  <project timestamp="1625774310340" name="All files">
+<coverage generated="1625927439918" clover="3.2.0">
+  <project timestamp="1625927439918" name="All files">
     <metrics statements="256" coveredstatements="252" conditionals="51" coveredconditionals="51" methods="11" coveredmethods="10" elements="318" coveredelements="313" complexity="0" loc="256" ncloc="256" packages="3" files="4" classes="4"/>
     <package name="entities">
       <metrics statements="38" coveredstatements="34" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="0"/>
-      <file name="User.ts" path="C:\Users\04.000376\source-github\nodejs\next_level_week_6\src\entities\User.ts">
+      <file name="User.ts" path="C:\Users\wilto\source-github\nodejs\next_level_week_6\src\entities\User.ts">
         <metrics statements="38" coveredstatements="34" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -48,7 +48,7 @@
     </package>
     <package name="repositories">
       <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
-      <file name="UsersRepositories.ts" path="C:\Users\04.000376\source-github\nodejs\next_level_week_6\src\repositories\UsersRepositories.ts">
+      <file name="UsersRepositories.ts" path="C:\Users\wilto\source-github\nodejs\next_level_week_6\src\repositories\UsersRepositories.ts">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -61,7 +61,7 @@
     </package>
     <package name="services">
       <metrics statements="211" coveredstatements="211" conditionals="48" coveredconditionals="48" methods="9" coveredmethods="9"/>
-      <file name="AuthenticateUserService.ts" path="C:\Users\04.000376\source-github\nodejs\next_level_week_6\src\services\AuthenticateUserService.ts">
+      <file name="AuthenticateUserService.ts" path="C:\Users\wilto\source-github\nodejs\next_level_week_6\src\services\AuthenticateUserService.ts">
         <metrics statements="41" coveredstatements="41" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -105,7 +105,7 @@
         <line num="40" count="1" type="stmt"/>
         <line num="41" count="1" type="stmt"/>
       </file>
-      <file name="UsersService.ts" path="C:\Users\04.000376\source-github\nodejs\next_level_week_6\src\services\UsersService.ts">
+      <file name="UsersService.ts" path="C:\Users\wilto\source-github\nodejs\next_level_week_6\src\services\UsersService.ts">
         <metrics statements="170" coveredstatements="170" conditionals="42" coveredconditionals="42" methods="7" coveredmethods="7"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>

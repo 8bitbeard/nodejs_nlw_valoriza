@@ -20,15 +20,31 @@ jest.mock('typeorm', () => ({
   Repository: jest.fn(),
 }));
 
-jest.mock('bcryptjs', () => ({
-  __esModule: true,
-  compare: jest.fn()
-}))
+jest.mock("bcryptjs", () => {
+  const compare = async (password: string, userPassword: string) => {
+    return (
+      new Promise((resolve) => {
+        resolve(password === userPassword ? 1 : 0);
+      })
+    )
+  }
+  return {
+    compare
+  }
+})
+
+jest.mock("jsonwebtoken", () => {
+  const sign = () => {
+    return "token-test";
+  }
+
+  return {
+    sign
+  }
+})
 
 describe('', () => {
   const getCustomRepositoryMock = mocked(getCustomRepository);
-  const compareMock = jest.fn();
-  const signMock = mocked(sign);
   const findOneMock = jest.fn();
   const findMock = jest.fn();
   const createMock = jest.fn();
@@ -45,8 +61,6 @@ describe('', () => {
     Repository.prototype.save = saveMock;
     Repository.prototype.update = updateMock;
     Repository.prototype.delete = deleteMock;
-    jest.mock("bcryptjs")
-    bcryptjs.prototype.compare = compareMock;
     usersRepositories = new UsersRepositories();
   })
 
@@ -93,13 +107,12 @@ describe('', () => {
     const userData = {
       id: '6775af3c-8a68-41a5-98cb-fc00e6cbe8e2',
       email: 'teste@teste.com',
-      password: '$2a$08$DZfBUqUQUmHZJg0vtmZC8OEeuuYNmpsGRd1/sfiUleWFqNNXli6Mm'
+      password: '1234'
     }
     getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
-    compareMock.mockReturnValueOnce(true)
     const authenticateUserService = new AuthenticateUserService();
     findOneMock.mockReturnValueOnce(userData);
-    const token = await authenticateUserService.execute({email: userData.email, password: '1234'})
+    await authenticateUserService.execute({email: userData.email, password: '1234'})
     expect(getCustomRepository).toBeCalledTimes(1);
     expect(findOneMock).toBeCalledTimes(1);
   })
