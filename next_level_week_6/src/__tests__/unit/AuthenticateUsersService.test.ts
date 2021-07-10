@@ -43,7 +43,7 @@ jest.mock("jsonwebtoken", () => {
   }
 })
 
-describe('', () => {
+describe('AuthenticateUsersService', () => {
   const getCustomRepositoryMock = mocked(getCustomRepository);
   const findOneMock = jest.fn();
   const findMock = jest.fn();

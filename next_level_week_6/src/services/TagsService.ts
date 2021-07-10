@@ -1,7 +1,6 @@
 import { getCustomRepository } from "typeorm";
 import { TagsRepositories } from "../repositories/TagsRepositories";
 import { classToPlain } from "class-transformer";
-import { hash } from "bcryptjs";
 
 class TagsService {
 
@@ -12,8 +11,8 @@ class TagsService {
           throw new Error("Incorrect name!");
         }
 
-        if (name.length > 50) {
-          throw new Error("Tag name must have a maximum size of 50 chars!")
+        if (name.length > 25) {
+          throw new Error("Tag name must have a maximum size of 25 chars!")
         }
 
         // SELECT * FROM tags WHERE name = 'name'
