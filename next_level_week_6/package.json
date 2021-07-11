@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-    "test": "set NODE_ENV=test&& jest --runInBand --coverage",
+    "test:unit": "set NODE_ENV=test&& jest --runInBand --coverage",
+    "test:integration": "set NODE_ENV=test&& jest -c ./jest.integration.config.ts --runInBand",
     "mocha": "mocha"
   },
   "devDependencies": {
