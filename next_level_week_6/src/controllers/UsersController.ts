@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { isJsxFragment } from "typescript";
 import { UsersService } from "../services/UsersService";
 
 class UsersController {
@@ -68,9 +69,9 @@ class UsersController {
         const { password } = request.body;
         const id = request.user_id;
 
-        const user = usersService.update({id, password});
+        await usersService.update({id, password});
 
-        return response.status(200).json(user)
+        return response.status(200).json();
     }
 }
 
