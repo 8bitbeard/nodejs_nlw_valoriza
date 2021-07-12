@@ -24,7 +24,6 @@ class ComplimentsController {
         })
 
         return response.status(201).json(compliment);
-
     }
 
     async remove(request: Request, response: Response) {
@@ -34,9 +33,8 @@ class ComplimentsController {
 
         await complimentsService.remove(user_id, id)
 
-        return response.status(204);
+        return response.status(204).json();
     }
-
 }
 
 export { ComplimentsController }
