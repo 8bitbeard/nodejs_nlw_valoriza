@@ -3,13 +3,23 @@ import { ComplimentsService } from "../services/ComplimentsService";
 
 class ComplimentsController {
 
-    async search(request: Request, response: Response) {
+    async searchBySender(request: Request, response: Response) {
         const complimentsService = new ComplimentsService();
+        const user_id = request.user_id;
 
-        const compliments = await complimentsService.search()
+        const compliments = await complimentsService.searchBySender(user_id)
 
         return response.status(200).json(compliments)
     }
+
+    async searchByReceiver(request: Request, response: Response) {
+      const complimentsService = new ComplimentsService();
+      const user_id = request.user_id;
+
+      const compliments = await complimentsService.searchByReceiver(user_id)
+
+      return response.status(200).json(compliments)
+  }
 
     async create(request: Request, response: Response) {
         const complimentsService = new ComplimentsService();

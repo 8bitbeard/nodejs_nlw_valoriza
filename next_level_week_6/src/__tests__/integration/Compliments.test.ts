@@ -5,11 +5,11 @@ import createConnection from '../../database';
 
 describe('Compliments', () => {
 
-  let userSender;
-  let userReceiver;
-  let normalTokenResponse;
-  let adminTokenResponse;
-  let createdTag;
+  let userSender: request.Response;
+  let userReceiver: request.Response;
+  let normalTokenResponse: request.Response;
+  let adminTokenResponse: request.Response;
+  let createdTag: request.Response;
 
   beforeEach(async() => {
     const connection = await createConnection();
@@ -63,7 +63,7 @@ describe('Compliments', () => {
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
-  
+
       expect(response.status).toBe(201);
       expect(response.body.id).toBeDefined();
       expect(response.body.user_sender).toBe(userSender.body.id);
@@ -72,7 +72,7 @@ describe('Compliments', () => {
       expect(response.body.message).toBe('This is a nice compliment');
       expect(response.body.created_at).toBeDefined();
     })
-  
+
     it('should be able to create a compliment with an authenticated normal user', async () => {
       const response = await request(app).post('/compliments').set(
         'Authorization', `Bearer ${normalTokenResponse.body}`
@@ -81,7 +81,7 @@ describe('Compliments', () => {
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
-  
+
       expect(response.status).toBe(201);
       expect(response.body.id).toBeDefined();
       expect(response.body.user_sender).toBe(userSender.body.id);
@@ -97,10 +97,10 @@ describe('Compliments', () => {
         user_receiver: userSender.body.id,
         message: 'This is a nice compliment'
       })
-  
+
       expect(response.status).toBe(401);
     })
-  
+
     it('should not be able to create a compliment for the sender user', async () => {
       const response = await request(app).post('/compliments').set(
         'Authorization', `Bearer ${normalTokenResponse.body}`
@@ -109,13 +109,13 @@ describe('Compliments', () => {
         user_receiver: userSender.body.id,
         message: 'This is a nice compliment'
       })
-  
+
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
         error: 'Incorrect User Receiver'
       });
     })
-  
+
     it('should not be able to create a compliment on an inexistent tag', async () => {
       const response = await request(app).post('/compliments').set(
         'Authorization', `Bearer ${normalTokenResponse.body}`
@@ -124,13 +124,13 @@ describe('Compliments', () => {
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
-  
+
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
         error: 'Tag does not exists!'
       });
     })
-  
+
     it('should not be able to create a compliment to an inexistent user', async () => {
       const response = await request(app).post('/compliments').set(
         'Authorization', `Bearer ${normalTokenResponse.body}`
@@ -139,7 +139,7 @@ describe('Compliments', () => {
         user_receiver: 'invalid_tag',
         message: 'This is a nice compliment'
       })
-  
+
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
         error: 'User Receiver does not exists!'
@@ -160,7 +160,7 @@ describe('Compliments', () => {
       const response = await request(app).delete(`/compliments/inexistent`).set(
         'Authorization', `Bearer ${normalTokenResponse.body}`
       ).send()
-  
+
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
         error: 'Compliment not found!'
@@ -177,7 +177,7 @@ describe('Compliments', () => {
       })
 
       const response = await request(app).delete(`/compliments/inexistent`).send()
-  
+
       expect(response.status).toBe(401);
     })
 
@@ -193,8 +193,74 @@ describe('Compliments', () => {
       const response = await request(app).delete('/compliments/' + createdCompliment.body.id).set(
         'Authorization', `Bearer ${normalTokenResponse.body}`
       ).send()
-  
+
       expect(response.status).toBe(204);
+    })
+  })
+
+  describe('GET /compliments/sent', () => {
+    it('should be able to return te sent compliment with status 200', async () => {
+      const createdCompliment = await request(app).post('/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body}`
+      ).send({
+        tag_id: createdTag.body.id,
+        user_receiver: userReceiver.body.id,
+        message: 'This is a nice compliment'
+      })
+
+      const response = await request(app).get('/compliments/sent').set(
+        'Authorization', `Bearer ${normalTokenResponse.body}`
+      ).send()
+
+      expect(response.status).toBe(200);
+    })
+
+    it('should not be able to return sent compliments when not authenticated', async () =>{
+      const response = await request(app).get('/compliments/sent').send();
+
+      expect(response.status).toBe(401);
+    })
+
+    it('should return an empty list when the logged user dont have any sent commpliments', async () => {
+      const response = await request(app).get('/compliments/sent').set(
+        'Authorization', `Bearer ${normalTokenResponse.body}`
+      ).send()
+
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual([]);
+    })
+  })
+
+  describe('GET /compliments/received', () => {
+    it('should be able to return te recived compliment with status 200', async () => {
+      const createdCompliment = await request(app).post('/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body}`
+      ).send({
+        tag_id: createdTag.body.id,
+        user_receiver: userReceiver.body.id,
+        message: 'This is a nice compliment'
+      })
+
+      const response = await request(app).get('/compliments/sent').set(
+        'Authorization', `Bearer ${adminTokenResponse.body}`
+      ).send()
+
+      expect(response.status).toBe(200);
+    })
+
+    it('should not be able to return recived compliments when not authenticated', async () =>{
+      const response = await request(app).get('/compliments/sent').send();
+
+      expect(response.status).toBe(401);
+    })
+
+    it('should return an empty list when the logged user dont have any recived commpliments', async () => {
+      const response = await request(app).get('/compliments/sent').set(
+        'Authorization', `Bearer ${normalTokenResponse.body}`
+      ).send()
+
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual([]);
     })
   })
 })

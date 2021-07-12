@@ -18,74 +18,76 @@ describe('AuthenticateUsers', () => {
     await connection.close();
   })
 
-  it('should be able to authenticate with a normal user with valid credentials', async () => {
-    await request(app).post('/users').send({
-      name: 'User',
-      email: 'user@example.com',
-      password: '1234'
+  describe('POST /login', () => {
+    it('should be able to authenticate with a normal user with valid credentials', async () => {
+      await request(app).post('/users').send({
+        name: 'User',
+        email: 'user@example.com',
+        password: '1234'
+      })
+
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: '1234'
+      })
+
+      expect(response.status).toBe(200);
     })
 
-    const response = await request(app).post('/login').send({
-      email: 'user@example.com',
-      password: '1234'
+    it('should be able to authenticate with a admin user with valid credentials', async () => {
+      await request(app).post('/users').send({
+        name: 'User',
+        email: 'user@example.com',
+        password: '1234',
+        admin: true
+      })
+
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: '1234'
+      })
+
+      expect(response.status).toBe(200);
     })
 
-    expect(response.status).toBe(200);
-  })
+    it('should not be able to authenticate with a invalid email adress', async () => {
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: '1234'
+      })
 
-  it('should be able to authenticate with a admin user with valid credentials', async () => {
-    await request(app).post('/users').send({
-      name: 'User',
-      email: 'user@example.com',
-      password: '1234',
-      admin: true
+      expect(response.status).toBe(400)
     })
 
-    const response = await request(app).post('/login').send({
-      email: 'user@example.com',
-      password: '1234'
+    it('should not be able to authenticate with a invalid admin user password', async () => {
+      await request(app).post('/users').send({
+        name: 'User',
+        email: 'user@example.com',
+        password: '1234',
+        admin: true
+      })
+
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: '2345'
+      })
+
+      expect(response.status).toBe(400)
     })
 
-    expect(response.status).toBe(200);
-  })
+    it('should not be able to authenticate with a invalid normal user password', async () => {
+      await request(app).post('/users').send({
+        name: 'User',
+        email: 'user@example.com',
+        password: '1234'
+      })
 
-  it('should not be able to authenticate with a invalid email adress', async () => {
-    const response = await request(app).post('/login').send({
-      email: 'user@example.com',
-      password: '1234'
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: '2345'
+      })
+
+      expect(response.status).toBe(400)
     })
-
-    expect(response.status).toBe(400)
-  })
-
-  it('should not be able to authenticate with a invalid admin user password', async () => {
-    await request(app).post('/users').send({
-      name: 'User',
-      email: 'user@example.com',
-      password: '1234',
-      admin: true
-    })
-
-    const response = await request(app).post('/login').send({
-      email: 'user@example.com',
-      password: '2345'
-    })
-
-    expect(response.status).toBe(400)
-  })
-
-  it('should not be able to authenticate with a invalid normal user password', async () => {
-    await request(app).post('/users').send({
-      name: 'User',
-      email: 'user@example.com',
-      password: '1234'
-    })
-
-    const response = await request(app).post('/login').send({
-      email: 'user@example.com',
-      password: '2345'
-    })
-
-    expect(response.status).toBe(400)
   })
 })

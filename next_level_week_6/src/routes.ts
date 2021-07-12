@@ -34,8 +34,8 @@ router.get("/tags", ensureAuthenticated, tagsController.search);
 // Compliments
 router.post("/compliments", ensureAuthenticated, complimentsController.create)
 router.delete("/compliments/:id", ensureAuthenticated, complimentsController.remove)
-router.get("/compliments/:id/sent", ensureAuthenticated, complimentsController.search)
-router.get("/compliments/:id/recived", ensureAuthenticated, complimentsController.search)
+router.get("/compliments/sent", ensureAuthenticated, complimentsController.searchBySender)
+router.get("/compliments/received", ensureAuthenticated, complimentsController.searchByReceiver)
 
 
 export { router }

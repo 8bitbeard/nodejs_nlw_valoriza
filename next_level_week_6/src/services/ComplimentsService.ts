@@ -19,11 +19,21 @@ class ComplimentsService {
         this.complimentsRepositories = getCustomRepository(ComplimentsRepositories)
     }
 
-    async search() {
-        const compliments = await this.complimentsRepositories.find()
+    async searchBySender(user_id: string) {
+        const compliments = await this.complimentsRepositories.find({
+          user_sender: user_id
+        })
 
         return compliments
     }
+
+    async searchByReceiver(user_id: string) {
+      const compliments = await this.complimentsRepositories.find({
+        user_receiver: user_id
+      })
+
+      return compliments
+  }
 
     async create({ tag_id, user_sender, user_receiver, message }: IComplimentRequest) {
         const usersRepositories = getCustomRepository(UsersRepositories);
