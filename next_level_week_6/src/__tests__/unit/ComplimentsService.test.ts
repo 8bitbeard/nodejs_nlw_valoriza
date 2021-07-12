@@ -47,7 +47,7 @@ describe('ComplimentsService', () => {
     tagsRepositories = new TagsRepositories();
   })
 
-  describe('search', () => {
+  describe('searchBySender', () => {
 
     beforeEach(async () => {
       jest.resetAllMocks();
@@ -59,6 +59,21 @@ describe('ComplimentsService', () => {
       const complimentsService = new ComplimentsService();
       findMock.mockReturnValueOnce([]);
       await complimentsService.searchBySender('123');
+      expect(getCustomRepositoryMock).toBeCalledTimes(1);
+      expect(findMock).toBeCalledTimes(1);
+    })
+  })
+
+  describe('searchByReceiver', () => {
+    beforeEach(async () => {
+      jest.resetAllMocks();
+    })
+
+    it('should return an empty list when there is no compliments on the database', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(complimentsRepositories);
+      const complimentsService = new ComplimentsService();
+      findMock.mockReturnValueOnce([])
+      await complimentsService.searchByReceiver('123');
       expect(getCustomRepositoryMock).toBeCalledTimes(1);
       expect(findMock).toBeCalledTimes(1);
     })

@@ -4,13 +4,14 @@ import { ComplimentsService } from "../../services/ComplimentsService";
 jest.mock("../../services/ComplimentsService");
 
 describe('ComplimentsController', () => {
-  const searchMock = jest.fn();
+  const searchBySenderMock = jest.fn();
+  const searchByReceiverMock = jest.fn();
   const createMock = jest.fn();
   const removeMock = jest.fn();
 
   beforeAll(() => {
-    ComplimentsService.prototype.searchBySender = searchMock;
-    ComplimentsService.prototype.searchByReceiver = searchMock;
+    ComplimentsService.prototype.searchBySender = searchBySenderMock;
+    ComplimentsService.prototype.searchByReceiver = searchByReceiverMock;
     ComplimentsService.prototype.create = createMock;
     ComplimentsService.prototype.remove = removeMock;
   })
@@ -19,7 +20,7 @@ describe('ComplimentsController', () => {
     // jest.resetAllMocks();
   });
 
-  describe('search', () => {
+  describe('searchBySender', () => {
     const mockRequest: any = {
       body: {
         email: 'example@example.net',
@@ -33,10 +34,10 @@ describe('ComplimentsController', () => {
     }
 
     it('should return an empty list when there is no sent compliments on DB', async () => {
-      searchMock.mockResolvedValueOnce([])
+      searchBySenderMock.mockResolvedValueOnce([])
       const complimentsController = new ComplimentsController();
       await complimentsController.searchBySender(mockRequest, mockResponse);
-      expect(searchMock).toBeCalledTimes(1);
+      expect(searchBySenderMock).toBeCalledTimes(1);
       expect(mockResponse.status).toBeCalledWith(200);
       expect(mockResponse.json).toBeCalledWith([]);
     })
@@ -50,10 +51,50 @@ describe('ComplimentsController', () => {
         message: "You are fenomenal!",
         created_at: "2021-07-10T15:50:24.000Z"
       }]
-      searchMock.mockResolvedValueOnce(complimentsData);
+      searchBySenderMock.mockResolvedValueOnce(complimentsData);
       const complimentsController = new ComplimentsController();
       await complimentsController.searchBySender(mockRequest, mockResponse);
-      expect(searchMock).toBeCalledTimes(1);
+      expect(searchBySenderMock).toBeCalledTimes(1);
+      expect(mockResponse.status).toBeCalledWith(200);
+      expect(mockResponse.json).toBeCalledWith(complimentsData)
+    })
+  })
+
+  describe('searchByReceiver', () => {
+    const mockRequest: any = {
+      body: {
+        email: 'example@example.net',
+        password: '1234'
+      }
+    }
+
+    const mockResponse: any = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    }
+
+    it('should return an empty list when there is no received compliments on DB', async () => {
+      searchByReceiverMock.mockResolvedValueOnce([]);
+      const complimentsController = new ComplimentsController();
+      await complimentsController.searchByReceiver(mockRequest, mockResponse);
+      expect(searchByReceiverMock).toBeCalledTimes(1);
+      expect(mockResponse.status).toBeCalledWith(200);
+      expect(mockResponse.json).toBeCalledWith([]);
+    })
+
+    it('should return a list of received compliments', async () => {
+      const complimentsData = [{
+        id: "ecf3bc00-2185-4a1d-84e5-0e92eee88588",
+        user_sender: "468f6219-3386-420b-beb3-dcacccacc9fe",
+        user_receiver: "453eea87-7416-40f4-9e37-e064e5fed963",
+        tag_id: "8f42f366-a220-45a8-b6cb-c7e94b438866",
+        message: "You are fenomenal!",
+        created_at: "2021-07-10T15:50:24.000Z"
+      }]
+      searchByReceiverMock.mockResolvedValueOnce(complimentsData);
+      const complimentsController = new ComplimentsController();
+      await complimentsController.searchByReceiver(mockRequest, mockResponse);
+      expect(searchByReceiverMock).toBeCalledTimes(1);
       expect(mockResponse.status).toBeCalledWith(200);
       expect(mockResponse.json).toBeCalledWith(complimentsData)
     })
