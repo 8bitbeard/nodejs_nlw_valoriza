@@ -86,7 +86,7 @@ class UsersService {
     if(!user) {
       throw new Error('User not found!')
     }
-    return user;
+    return classToPlain(user);
   }
 
   async edit({id, name, email, admin}: IUserEdit) {
@@ -116,7 +116,7 @@ class UsersService {
 
   async remove(admin_id: string, user_id: string) {
     const usersRepositories = getCustomRepository(UsersRepositories);
-    const userExists = usersRepositories.findOne({
+    const userExists = await usersRepositories.findOne({
       id: user_id
     });
 

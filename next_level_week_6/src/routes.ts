@@ -20,7 +20,7 @@ router.post("/login", authenticateUserController.handle)
 router.post("/users", usersController.create);
 router.put("/users", ensureAuthenticated, ensureAdmin, usersController.edit);
 router.get("/users", ensureAuthenticated, usersController.index);
-router.get("/users/:id", ensureAuthenticated, ensureAdmin, usersController.search);
+router.get("/users/:id", ensureAuthenticated, usersController.search);
 router.delete("/users/:id", ensureAuthenticated, ensureAdmin, usersController.remove);
 router.patch("/users/password", ensureAuthenticated, usersController.update)
 // router.get("/users/compliments/send", ensureAuthenticated, listUserSendComplimentsController.handle)

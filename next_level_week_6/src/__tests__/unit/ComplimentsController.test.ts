@@ -7,17 +7,18 @@ describe('ComplimentsController', () => {
   const searchMock = jest.fn();
   const createMock = jest.fn();
   const removeMock = jest.fn();
-  
+
   beforeAll(() => {
-    ComplimentsService.prototype.search = searchMock;
+    ComplimentsService.prototype.searchBySender = searchMock;
+    ComplimentsService.prototype.searchByReceiver = searchMock;
     ComplimentsService.prototype.create = createMock;
     ComplimentsService.prototype.remove = removeMock;
   })
-  
+
   beforeEach(async () => {
     // jest.resetAllMocks();
   });
-  
+
   describe('search', () => {
     const mockRequest: any = {
       body: {
@@ -31,16 +32,16 @@ describe('ComplimentsController', () => {
       json: jest.fn()
     }
 
-    it('should return an empty list when there is no compliments on DB', async () => {
+    it('should return an empty list when there is no sent compliments on DB', async () => {
       searchMock.mockResolvedValueOnce([])
       const complimentsController = new ComplimentsController();
-      await complimentsController.search(mockRequest, mockResponse);
+      await complimentsController.searchBySender(mockRequest, mockResponse);
       expect(searchMock).toBeCalledTimes(1);
       expect(mockResponse.status).toBeCalledWith(200);
       expect(mockResponse.json).toBeCalledWith([]);
     })
 
-    it('should return a list of compliments', async () => {
+    it('should return a list of sent compliments', async () => {
       const complimentsData = [{
         id: "ecf3bc00-2185-4a1d-84e5-0e92eee88588",
         user_sender: "468f6219-3386-420b-beb3-dcacccacc9fe",
@@ -51,7 +52,7 @@ describe('ComplimentsController', () => {
       }]
       searchMock.mockResolvedValueOnce(complimentsData);
       const complimentsController = new ComplimentsController();
-      await complimentsController.search(mockRequest, mockResponse);
+      await complimentsController.searchBySender(mockRequest, mockResponse);
       expect(searchMock).toBeCalledTimes(1);
       expect(mockResponse.status).toBeCalledWith(200);
       expect(mockResponse.json).toBeCalledWith(complimentsData)

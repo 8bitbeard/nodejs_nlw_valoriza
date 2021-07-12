@@ -82,11 +82,11 @@ describe('UsersController', () => {
       expect(indexMock).toBeCalledTimes(1);
     })
 
-    it('should return an error when no user is found with status 404', async () => {
+    it('should return an empty list when no user is found', async () => {
       indexMock.mockResolvedValueOnce([]);
       const usersController = new UsersController();
       await usersController.index(mockRequest, mockResponse);
-      expect(mockResponse.status).toBeCalledWith(404);
+      expect(mockResponse.status).toBeCalledWith(200);
     })
 
     it('should return a list of users when searched with only name', async () => {

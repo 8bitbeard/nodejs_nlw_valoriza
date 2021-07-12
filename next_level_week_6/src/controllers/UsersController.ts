@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { isJsxFragment } from "typescript";
 import { UsersService } from "../services/UsersService";
 
 class UsersController {
@@ -24,12 +23,7 @@ class UsersController {
             email
         });
 
-        if(users.length > 0) {
-            return response.status(200).json(users);
-        } else {
-            return response.status(404).json({code: "NOT_FOUND", message: "No users found", details: ["No users found"]});
-        }
-
+        return response.status(200).json(users);
     }
 
     async search(request: Request, response: Response) {
