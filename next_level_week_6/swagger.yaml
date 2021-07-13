@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "This is the swagger for the `NLW Valoriza`, an API built on the Next Level Week #06 event. Here you will find all the endpoints created on the mini course, and new ones, added on a improovement of the API"
-  version: "1.1.1"
+  version: "1.1.2"
   title: "NLW Valoriza"
 host: "localhost:3000"
 basePath: "/nlw-valoriza"
@@ -39,7 +39,9 @@ paths:
           description: "successful operation"
           examples:
             application/json:
+              status: 'AUTHENTICATION_SUCCESS'
               access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbHRvbjJAZXhhbXBsZS5jb20iLCJpYXQiOjE2MjYxNzI5MjQsImV4cCI6MTYyNjI1OTMyNCwic3ViIjoiNDUzZWVhODctNzQxNi00MGY0LTllMzctZTA2NGU1ZmVkOTYzIn0.ApvFv5Dz6yPnURYfC7BBAEID2DHf08TG4Yllh49_VuA'
+              token_type: 'bearer'
               expires_in: '1d'
   /v1/users:
     post:
