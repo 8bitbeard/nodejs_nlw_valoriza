@@ -69,51 +69,53 @@ describe('AuthenticateUsersService', () => {
     // getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
   });
 
-  it('should return an error when trying to authenticate with inexistent user', async () => {
-    const userData = {
-      email: 'wilton@example.com',
-      password: '1234'
-    }
-    getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
-    const authenticateUserService = new AuthenticateUserService();
-    findOneMock.mockReturnValueOnce(null)
-    await authenticateUserService.execute(userData).catch(error => {
-      expect(error).toBeInstanceOf(Error);
-      expect(error).toMatchObject({
-        message: 'Email/Password incorrect'
+  describe('execute', () => {
+    it('should return an error when trying to authenticate with inexistent user', async () => {
+      const userData = {
+        email: 'wilton@example.com',
+        password: '1234'
+      }
+      getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
+      const authenticateUserService = new AuthenticateUserService();
+      findOneMock.mockReturnValueOnce(null)
+      await authenticateUserService.execute(userData).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: 'Email/Password incorrect'
+        })
       })
-    })
-    expect(getCustomRepository).toBeCalledTimes(1);
-  });
+      expect(getCustomRepository).toBeCalledTimes(1);
+    });
 
-  it('should return an error when trying to authenticate with wrong password', async () => {
-    const userData = {
-      email: 'wilton@example.com',
-      password: '1234'
-    }
-    getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
-    const authenticateUserService = new AuthenticateUserService();
-    findOneMock.mockReturnValueOnce(userData)
-    await authenticateUserService.execute({ ...userData, password: '2345' }).catch(error => {
-      expect(error).toBeInstanceOf(Error);
-      expect(error).toMatchObject({
-        message: 'Email/Password incorrect'
+    it('should return an error when trying to authenticate with wrong password', async () => {
+      const userData = {
+        email: 'wilton@example.com',
+        password: '1234'
+      }
+      getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
+      const authenticateUserService = new AuthenticateUserService();
+      findOneMock.mockReturnValueOnce(userData)
+      await authenticateUserService.execute({ ...userData, password: '2345' }).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: 'Email/Password incorrect'
+        })
       })
-    })
-    expect(getCustomRepository).toBeCalledTimes(1);
-  });
+      expect(getCustomRepository).toBeCalledTimes(1);
+    });
 
-  it('should authenticate with valid credentials', async () => {
-    const userData = {
-      id: '6775af3c-8a68-41a5-98cb-fc00e6cbe8e2',
-      email: 'teste@teste.com',
-      password: '1234'
-    }
-    getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
-    const authenticateUserService = new AuthenticateUserService();
-    findOneMock.mockReturnValueOnce(userData);
-    await authenticateUserService.execute({email: userData.email, password: '1234'})
-    expect(getCustomRepository).toBeCalledTimes(1);
-    expect(findOneMock).toBeCalledTimes(1);
+    it('should authenticate with valid credentials', async () => {
+      const userData = {
+        id: '6775af3c-8a68-41a5-98cb-fc00e6cbe8e2',
+        email: 'teste@teste.com',
+        password: '1234'
+      }
+      getCustomRepositoryMock.mockReturnValueOnce(usersRepositories);
+      const authenticateUserService = new AuthenticateUserService();
+      findOneMock.mockReturnValueOnce(userData);
+      await authenticateUserService.execute({email: userData.email, password: '1234'})
+      expect(getCustomRepository).toBeCalledTimes(1);
+      expect(findOneMock).toBeCalledTimes(1);
+    })
   })
 })

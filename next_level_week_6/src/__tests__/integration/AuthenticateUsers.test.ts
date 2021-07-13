@@ -18,15 +18,15 @@ describe('AuthenticateUsers', () => {
     await connection.close();
   })
 
-  describe('POST /login', () => {
+  describe('POST /v1/login', () => {
     it('should be able to authenticate with a normal user with valid credentials', async () => {
-      await request(app).post('/users').send({
+      await request(app).post('/nlw-valoriza/v1/users').send({
         name: 'User',
         email: 'user@example.com',
         password: '1234'
       })
 
-      const response = await request(app).post('/login').send({
+      const response = await request(app).post('/nlw-valoriza/v1/login').send({
         email: 'user@example.com',
         password: '1234'
       })
@@ -35,14 +35,14 @@ describe('AuthenticateUsers', () => {
     })
 
     it('should be able to authenticate with a admin user with valid credentials', async () => {
-      await request(app).post('/users').send({
+      await request(app).post('/nlw-valoriza/v1/users').send({
         name: 'User',
         email: 'user@example.com',
         password: '1234',
         admin: true
       })
 
-      const response = await request(app).post('/login').send({
+      const response = await request(app).post('/nlw-valoriza/v1/login').send({
         email: 'user@example.com',
         password: '1234'
       })
@@ -51,7 +51,7 @@ describe('AuthenticateUsers', () => {
     })
 
     it('should not be able to authenticate with a invalid email adress', async () => {
-      const response = await request(app).post('/login').send({
+      const response = await request(app).post('/nlw-valoriza/v1/login').send({
         email: 'user@example.com',
         password: '1234'
       })
@@ -60,14 +60,14 @@ describe('AuthenticateUsers', () => {
     })
 
     it('should not be able to authenticate with a invalid admin user password', async () => {
-      await request(app).post('/users').send({
+      await request(app).post('/nlw-valoriza/v1/users').send({
         name: 'User',
         email: 'user@example.com',
         password: '1234',
         admin: true
       })
 
-      const response = await request(app).post('/login').send({
+      const response = await request(app).post('/nlw-valoriza/v1/login').send({
         email: 'user@example.com',
         password: '2345'
       })
@@ -76,13 +76,13 @@ describe('AuthenticateUsers', () => {
     })
 
     it('should not be able to authenticate with a invalid normal user password', async () => {
-      await request(app).post('/users').send({
+      await request(app).post('/nlw-valoriza/v1/users').send({
         name: 'User',
         email: 'user@example.com',
         password: '1234'
       })
 
-      const response = await request(app).post('/login').send({
+      const response = await request(app).post('/nlw-valoriza/v1/login').send({
         email: 'user@example.com',
         password: '2345'
       })

@@ -82,4 +82,8 @@ describe('TagsController', () =>{
       expect(mockResponse.json).toBeCalledWith(tagData);
     })
   })
+
+  describe('remove', () => {
+
+  })
 })

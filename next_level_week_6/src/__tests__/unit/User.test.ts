@@ -17,7 +17,7 @@ afterEach(() => {
   return conn.close();
 })
 
-describe('Users', () => {
+describe('User', () => {
   it('store a user and fetch it', async() => {
     let createUser = getRepository(User).create({
       name: 'John Doe',

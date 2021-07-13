@@ -16,31 +16,31 @@ describe('Compliments', () => {
 
     await connection.runMigrations();
 
-    userSender = await request(app).post('/users').send({
+    userSender = await request(app).post('/nlw-valoriza/v1/users').send({
       name: 'User',
       email: 'user@user.com',
       password: '1234',
       admin: true
     })
 
-    userReceiver = await request(app).post('/users').send({
+    userReceiver = await request(app).post('/nlw-valoriza/v1/users').send({
       name: 'Normal',
       email: 'normal@user.com',
       password: '1234'
     })
 
-    adminTokenResponse = await request(app).post('/login').send({
+    adminTokenResponse = await request(app).post('/nlw-valoriza/v1/login').send({
       email: 'user@user.com',
       password: '1234'
     })
 
-    normalTokenResponse = await request(app).post('/login').send({
+    normalTokenResponse = await request(app).post('/nlw-valoriza/v1/login').send({
       email: 'user@user.com',
       password: '1234'
     })
 
-    createdTag = await request(app).post('/tags').set(
-      'Authorization', `Bearer ${adminTokenResponse.body}`
+    createdTag = await request(app).post('/nlw-valoriza/v1/tags').set(
+      'Authorization', `Bearer ${adminTokenResponse.body.access_token}`
     ).send({
       name: 'Optmistic'
     })
@@ -54,10 +54,10 @@ describe('Compliments', () => {
     await connection.close();
   })
 
-  describe('POST /compliments', () => {
+  describe('POST /v1/compliments', () => {
     it('should be able to create a compliment with an authenticated admin user', async () => {
-      const response = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${adminTokenResponse.body}`
+      const response = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${adminTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
@@ -74,8 +74,8 @@ describe('Compliments', () => {
     })
 
     it('should be able to create a compliment with an authenticated normal user', async () => {
-      const response = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
@@ -92,7 +92,7 @@ describe('Compliments', () => {
     })
 
     it('should not be able to create a compliments without beign logged in', async () => {
-      const response = await request(app).post('/compliments').send({
+      const response = await request(app).post('/nlw-valoriza/v1/compliments').send({
         tag_id: createdTag.body.id,
         user_receiver: userSender.body.id,
         message: 'This is a nice compliment'
@@ -102,8 +102,8 @@ describe('Compliments', () => {
     })
 
     it('should not be able to create a compliment for the sender user', async () => {
-      const response = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userSender.body.id,
@@ -117,8 +117,8 @@ describe('Compliments', () => {
     })
 
     it('should not be able to create a compliment on an inexistent tag', async () => {
-      const response = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: 'inexistent',
         user_receiver: userReceiver.body.id,
@@ -132,8 +132,8 @@ describe('Compliments', () => {
     })
 
     it('should not be able to create a compliment to an inexistent user', async () => {
-      const response = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: 'invalid_tag',
@@ -147,18 +147,18 @@ describe('Compliments', () => {
     })
   })
 
-  describe('DELETE /compliments/:id', () => {
+  describe('DELETE /v1/compliments/:id', () => {
     it('should not be able to delete a compliment that does not exists', async () => {
-      const createdCompliment = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
 
-      const response = await request(app).delete(`/compliments/inexistent`).set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).delete(`/nlw-valoriza/v1/compliments/inexistent`).set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send()
 
       expect(response.status).toBe(400);
@@ -168,62 +168,62 @@ describe('Compliments', () => {
     })
 
     it('should not be able to delete a compliment without beign logged in', async () => {
-      const createdCompliment = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
 
-      const response = await request(app).delete(`/compliments/inexistent`).send()
+      const response = await request(app).delete(`/nlw-valoriza/v1/compliments/inexistent`).send()
 
       expect(response.status).toBe(401);
     })
 
     it('should be able to delete a compliment', async () => {
-      const createdCompliment = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
 
-      const response = await request(app).delete('/compliments/' + createdCompliment.body.id).set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).delete('/nlw-valoriza/v1/compliments/' + createdCompliment.body.id).set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send()
 
       expect(response.status).toBe(204);
     })
   })
 
-  describe('GET /compliments/sent', () => {
+  describe('GET /v1/compliments/sent', () => {
     it('should be able to return te sent compliment with status 200', async () => {
-      const createdCompliment = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
 
-      const response = await request(app).get('/compliments/sent').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).get('/nlw-valoriza/v1/compliments/sent').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send()
 
       expect(response.status).toBe(200);
     })
 
     it('should not be able to return sent compliments when not authenticated', async () =>{
-      const response = await request(app).get('/compliments/sent').send();
+      const response = await request(app).get('/nlw-valoriza/v1/compliments/sent').send();
 
       expect(response.status).toBe(401);
     })
 
     it('should return an empty list when the logged user dont have any sent commpliments', async () => {
-      const response = await request(app).get('/compliments/sent').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).get('/nlw-valoriza/v1/compliments/sent').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send()
 
       expect(response.status).toBe(200);
@@ -231,32 +231,32 @@ describe('Compliments', () => {
     })
   })
 
-  describe('GET /compliments/received', () => {
+  describe('GET /v1/compliments/received', () => {
     it('should be able to return te recived compliment with status 200', async () => {
-      const createdCompliment = await request(app).post('/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
         user_receiver: userReceiver.body.id,
         message: 'This is a nice compliment'
       })
 
-      const response = await request(app).get('/compliments/sent').set(
-        'Authorization', `Bearer ${adminTokenResponse.body}`
+      const response = await request(app).get('/nlw-valoriza/v1/compliments/sent').set(
+        'Authorization', `Bearer ${adminTokenResponse.body.access_token}`
       ).send()
 
       expect(response.status).toBe(200);
     })
 
     it('should not be able to return recived compliments when not authenticated', async () =>{
-      const response = await request(app).get('/compliments/sent').send();
+      const response = await request(app).get('/nlw-valoriza/v1/compliments/sent').send();
 
       expect(response.status).toBe(401);
     })
 
     it('should return an empty list when the logged user dont have any recived commpliments', async () => {
-      const response = await request(app).get('/compliments/sent').set(
-        'Authorization', `Bearer ${normalTokenResponse.body}`
+      const response = await request(app).get('/nlw-valoriza/v1/compliments/sent').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send()
 
       expect(response.status).toBe(200);

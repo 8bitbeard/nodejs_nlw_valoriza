@@ -17,8 +17,8 @@ afterEach(() => {
   return conn.close();
 })
 
-describe('Users', () => {
-  it('store a user and fetch it', async() => {
+describe('Compliment', () => {
+  it('store a compliment and fetch it', async() => {
     let complimentData = getRepository(Compliment).create({
       user_sender: 'Optmistic',
       user_receiver: 'Test',

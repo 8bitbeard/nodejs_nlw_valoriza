@@ -34,7 +34,14 @@ class AuthenticateUserService {
       expiresIn: "1d"
     })
 
-    return token;
+    const tokenResponse = {
+      status: 'AUTHENTICATION_SUCCESS',
+      access_token: token,
+      token_type: 'bearer',
+      expires_in: "1d"
+    }
+
+    return tokenResponse;
   }
 }
 

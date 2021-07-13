@@ -19,8 +19,8 @@ afterEach(() => {
   return conn.close();
 })
 
-describe('Users', () => {
-  it('store a user and fetch it', async() => {
+describe('Tag', () => {
+  it('store a tag and fetch it', async() => {
     let createTag = getRepository(Tag).create({
       name: 'Optmistic',
     });

@@ -126,4 +126,8 @@ describe('TagsService', () => {
       expect(findMock).toBeCalledTimes(1);
     })
   })
+
+  describe('remove', () => {
+
+  })
 })
