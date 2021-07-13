@@ -1,10 +1,10 @@
 swagger: "2.0"
 info:
   description: "This is the swagger for the `NLW Valoriza`, an API built on the Next Level Week #06 event. Here you will find all the endpoints created on the mini course, and new ones, added on a improovement of the API"
-  version: "1.0.0"
+  version: "1.1.1"
   title: "NLW Valoriza"
 host: "localhost:3000"
-basePath: "/v1"
+basePath: "/nlw-valoriza"
 tags:
 - name: "Authentication"
   description: "NLW Valoriza authentication operations"
@@ -18,7 +18,7 @@ schemes:
 - "https"
 - "http"
 paths:
-  /login:
+  /v1/login:
     post:
       tags:
       - "Authentication"
@@ -35,9 +35,13 @@ paths:
         schema:
           $ref: "#/definitions/Login"
       responses:
-        default:
+        "200":
           description: "successful operation"
-  /user:
+          examples:
+            application/json:
+              access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbHRvbjJAZXhhbXBsZS5jb20iLCJpYXQiOjE2MjYxNzI5MjQsImV4cCI6MTYyNjI1OTMyNCwic3ViIjoiNDUzZWVhODctNzQxNi00MGY0LTllMzctZTA2NGU1ZmVkOTYzIn0.ApvFv5Dz6yPnURYfC7BBAEID2DHf08TG4Yllh49_VuA'
+              expires_in: '1d'
+  /v1/users:
     post:
       tags:
       - "Users"
@@ -54,8 +58,10 @@ paths:
         schema:
           $ref: "#/definitions/User"
       responses:
-        default:
+        "201":
           description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserList"
     put:
       tags:
       - "Users"
@@ -77,8 +83,8 @@ paths:
         schema:
           $ref: "#/definitions/UserEdit"
       responses:
-        default:
-          description: "successful operation"
+        "204":
+          description: "Successful operation"
     get:
       tags:
       - "Users"
@@ -104,9 +110,12 @@ paths:
         required: false
         type: "string"
       responses:
-        default:
+        "200":
           description: "successful operation"
-  /users/{id}:
+          schema:
+            items:
+              $ref: "#/definitions/UserList"
+  /v1/users/{id}:
     get:
       tags:
       - "Users"
@@ -127,8 +136,10 @@ paths:
         required: true
         type: "string"
       responses:
-        default:
+        "200":
           description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserList"
     delete:
       tags:
       - "Users"
@@ -149,9 +160,9 @@ paths:
         required: true
         type: "string"
       responses:
-        default:
+        "204":
           description: "successful operation"
-  /users/password:
+  /v1/users/password:
     patch:
       tags:
       - "Users"
@@ -173,9 +184,9 @@ paths:
         schema:
           $ref: "#/definitions/PasswordEdit"
       responses:
-        default:
+        "200":
           description: "successful operation"
-  /tags:
+  /v1/tags:
     post:
       tags:
       - "Tags"
@@ -197,8 +208,10 @@ paths:
         schema:
           $ref: "#/definitions/Tag"
       responses:
-        default:
+        "201":
           description: "successful operation"
+          schema:
+            $ref: "#/definitions/CreateTags"
     get:
       tags:
       - "Tags"
@@ -222,7 +235,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/ListTags"
-  /tags{id}:
+  /v1/tags{id}:
     delete:
       tags:
       - "Tags"
@@ -243,9 +256,9 @@ paths:
         required: true
         type: "string"
       responses:
-        default:
-          description: "successful operation"
-  /compliments:
+        "204":
+          description: "Successful operation"
+  /v1/compliments:
     post:
       tags:
       - "Compliments"
@@ -267,9 +280,11 @@ paths:
         schema:
           $ref: "#/definitions/Compliments"
       responses:
-        default:
-          description: "successful operation"
-  /compliments/{id}:
+        "201":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/CreateCompliment"
+  /v1/compliments/{id}:
     delete:
       tags:
       - "Compliments"
@@ -290,13 +305,13 @@ paths:
         required: true
         type: "string"
       responses:
-        default:
-          description: "successful operation"
-  /compliments/{id}/sent:
+        "204":
+          description: "Successful operation"
+  /v1/compliments/sent:
     get:
       tags:
       - "Compliments"
-      summary: "List sent compliments by user"
+      summary: "List sent compliments by logged in user"
       description: "This can only be done by the logged in user."
       operationId: "listSentCompliments"
       produces:
@@ -307,19 +322,18 @@ paths:
         description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
         required: true
         type: "string"
-      - in: "path"
-        name: "id"
-        description: "A compliment ID. Ex: 2234537c-a01b-4ceb-b3b6-65cb825190f1"
-        required: true
-        type: "string"
       responses:
-        default:
+        "200":
           description: "successful operation"
-  /compliments/{id}/recived:
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SendReceiveCompliments"
+  /v1/compliments/received:
     get:
       tags:
       - "Compliments"
-      summary: "List recived compliments by user"
+      summary: "List received compliments by logged in user"
       description: "This can only be done by the logged in user."
       operationId: "listRecivedCompliments"
       produces:
@@ -330,14 +344,13 @@ paths:
         description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
         required: true
         type: "string"
-      - in: "path"
-        name: "id"
-        description: "A compliment ID. Ex: 2234537c-a01b-4ceb-b3b6-65cb825190f1"
-        required: true
-        type: "string"
       responses:
-        default:
+        "200":
           description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SendReceiveCompliments"
 definitions:
   Login:
     type: "object"
@@ -370,12 +383,18 @@ definitions:
   UserEdit:
     type: "object"
     properties:
+      id:
+        type: "string"
+        example: "9f60dffb-63a0-4b41-9096-69d86a905a9d"
       name:
         type: "string"
         example: "Example"
       email:
         type: "string"
         example: "example@example.com"
+      admin:
+        type: "boolean"
+        example: "true"
     xml:
       name: "UserEdit"
   UserList:
@@ -393,9 +412,6 @@ definitions:
       admin:
         type: "boolean"
         example: true
-      password:
-        type: "string"
-        example: "$2a$08$xmUJREXZ7ubkXK0oXxKZPegvxp9uVW6TaskJ8I.CJuuDgroA8G83m"
       created_at:
         type: "string"
         default: "2021-06-24T09:23:31.000Z"
@@ -440,6 +456,23 @@ definitions:
         example: "#optimistic"
     xml:
       name: "Tag"
+  CreateTags:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "5cd0f878-917a-4335-9322-2bbd5b665f64"
+      name:
+        type: "string"
+        example: "Optimistic"
+      created_at:
+        type: "string"
+        example: "2021-06-23T09:31:50.000Z"
+      updated_at:
+        type: "string"
+        example: "2021-06-23T09:31:50.000Z"
+    xml:
+      name: "CreateTags"
   Compliments:
     type: "object"
     properties:
@@ -454,6 +487,29 @@ definitions:
         example: "You are fenomenal!"
     xml:
       name: "Compliments"
+  CreateCompliment:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "9661734a-3d80-4a61-b550-087bb2167b88"
+      user_sender:
+        type: "string"
+        example: "9661734a-3d80-4a61-b550-087bb2167b88"
+      user_receiver:
+        type: "string"
+        example: "9661734a-3d80-4a61-b550-087bb2167b88"
+      tag_id:
+        type: "string"
+        example: "9661734a-3d80-4a61-b550-087bb2167b88"
+      message:
+        type: "string"
+        example: "You are an inspiration for the team!"
+      created_at:
+        type: "string"
+        example: "2021-06-26T23:30:20.000Z"
+    xml:
+      name: "CreateCompliments"
   SendReceiveCompliments:
     type: "object"
     properties:

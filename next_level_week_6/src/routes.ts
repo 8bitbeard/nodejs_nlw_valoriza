@@ -14,28 +14,25 @@ const usersController = new UsersController();
 const complimentsController = new ComplimentsController()
 
 // Authentication
-router.post("/login", authenticateUserController.handle)
+router.post("/v1/login", authenticateUserController.handle)
 
 // Users
-router.post("/users", usersController.create);
-router.put("/users", ensureAuthenticated, ensureAdmin, usersController.edit);
-router.get("/users", ensureAuthenticated, usersController.index);
-router.get("/users/:id", ensureAuthenticated, usersController.search);
-router.delete("/users/:id", ensureAuthenticated, ensureAdmin, usersController.remove);
-router.patch("/users/password", ensureAuthenticated, usersController.update)
-// router.get("/users/compliments/send", ensureAuthenticated, listUserSendComplimentsController.handle)
-// router.get("/users/compliments/receive", ensureAuthenticated, listUserReceiveComplimentsController.handle)
+router.post("/v1/users", usersController.create);
+router.put("/v1/users", ensureAuthenticated, ensureAdmin, usersController.edit);
+router.get("/v1/users", ensureAuthenticated, usersController.index);
+router.get("/v1/users/:id", ensureAuthenticated, usersController.search);
+router.delete("/v1/users/:id", ensureAuthenticated, ensureAdmin, usersController.remove);
+router.patch("/v1/users/password", ensureAuthenticated, usersController.update)
 
 // Tags
-router.post("/tags", ensureAuthenticated, ensureAdmin, tagsController.create);
-router.get("/tags", ensureAuthenticated, tagsController.search);
+router.post("/v1/tags", ensureAuthenticated, ensureAdmin, tagsController.create);
+router.get("/v1/tags", ensureAuthenticated, tagsController.search);
 // router.delete("/tags/:id", ensureAuthenticated, ensureAdmin, tagsController.remove);
 
 // Compliments
-router.post("/compliments", ensureAuthenticated, complimentsController.create)
-router.delete("/compliments/:id", ensureAuthenticated, complimentsController.remove)
-router.get("/compliments/sent", ensureAuthenticated, complimentsController.searchBySender)
-router.get("/compliments/received", ensureAuthenticated, complimentsController.searchByReceiver)
-
+router.post("/v1/compliments", ensureAuthenticated, complimentsController.create)
+router.delete("/v1/compliments/:id", ensureAuthenticated, complimentsController.remove)
+router.get("/v1/compliments/sent", ensureAuthenticated, complimentsController.searchBySender)
+router.get("/v1/compliments/received", ensureAuthenticated, complimentsController.searchByReceiver)
 
 export { router }
