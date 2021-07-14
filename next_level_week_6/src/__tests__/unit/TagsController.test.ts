@@ -7,10 +7,12 @@ describe('TagsController', () =>{
 
   const createMock = jest.fn();
   const searchMock = jest.fn();
+  const updateMock = jest.fn();
 
   beforeAll(() => {
     TagsService.prototype.create = createMock;
     TagsService.prototype.search = searchMock;
+    TagsService.prototype.update = updateMock;
   })
 
   describe('create', () => {
@@ -80,6 +82,37 @@ describe('TagsController', () =>{
       expect(searchMock).toBeCalledTimes(1);
       expect(mockResponse.status).toBeCalledWith(200);
       expect(mockResponse.json).toBeCalledWith(tagData);
+    })
+  })
+
+  describe('update', () => {
+
+    const mockRequest: any = {
+      body: {
+        name: 'Unit Test Mock'
+      }
+    }
+
+    const mockResponse: any = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    }
+
+    it('should return an error with status 400', async() => {
+      updateMock.mockRejectedValueOnce(new Error());
+      const tagsController = new TagsController();
+      await tagsController.update(mockRequest, mockResponse).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+      })
+      expect(updateMock).toBeCalledTimes(1);
+    })
+
+    it('should update a tag successfully', async() => {
+      updateMock.mockResolvedValueOnce(true);
+      const tagsController = new TagsController();
+      await tagsController.update(mockRequest, mockResponse);
+      expect(mockResponse.status).toBeCalledWith(204);
+      expect(mockResponse.json).toBeCalledWith();
     })
   })
 

@@ -27,6 +27,7 @@ router.patch("/v1/users/password", ensureAuthenticated, usersController.update)
 // Tags
 router.post("/v1/tags", ensureAuthenticated, ensureAdmin, tagsController.create);
 router.get("/v1/tags", ensureAuthenticated, tagsController.search);
+router.put("/v1/tags", ensureAuthenticated, ensureAdmin, tagsController.update);
 // router.delete("/tags/:id", ensureAuthenticated, ensureAdmin, tagsController.remove);
 
 // Compliments

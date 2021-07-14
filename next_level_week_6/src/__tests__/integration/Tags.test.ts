@@ -239,6 +239,152 @@ describe('User', () => {
     })
   })
 
+  describe('PUT /v1/tags', () => {
+    it('should not be able to update a tag name without beign authenticated', async() => {
+      const response = await request(app).put('/nlw-valoriza/v1/tags').send({
+        id: '8f42f366-a220-45a8-b6cb-c7e94b438866',
+        name: 'Optmistic'
+      })
+      expect(response.status).toBe(401);
+    })
+
+    it('should not be able to update a tag name witn an authenticated normal user', async () => {
+      const userData = await request(app).post('/nlw-valoriza/v1/users').send({
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234'
+      })
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: 'user@user.com',
+        password: '1234'
+      })
+
+      const response = await request(app).put('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        id: '8f42f366-a220-45a8-b6cb-c7e94b438866',
+        name: 'Optmistic'
+      })
+
+      expect(response.status).toBe(401);
+      expect(response.body).toMatchObject({
+        error: "Unauthorized"
+      })
+    })
+
+    it('should not be able to update a tag name without informing the new name', async() => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const response = await request(app).put('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        id: '8f42f366-a220-45a8-b6cb-c7e94b438866',
+        name: ''
+      })
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "Incorrect name!"
+      })
+    })
+
+    it('should not be able to update a tag sending a name bigger than 25 chars', async () => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const response = await request(app).put('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        id: '8f42f366-a220-45a8-b6cb-c7e94b438866',
+        name: 'ASDFGHJKLASDFGHJKLASDFGHJK'
+      })
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "Tag name must have a maximum size of 25 chars!"
+      })
+    })
+
+    it('should not be able to update the name of an inexistent tag', async () => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const response = await request(app).put('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        id: '8f42f366-a220-45a8-b6cb-c7e94b438866',
+        name: 'Optmistic'
+      })
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "Tag don't exist!"
+      })
+    })
+
+    it('should be able to update the name of an existing tag, when authenticated with an admin user', async() => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const createdTag = await request(app).post('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        name: "Optmistic!"
+      })
+
+      const response = await request(app).put('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        id: createdTag.body.id,
+        name: 'Enthusiast!'
+      })
+
+      expect(response.status).toBe(204);
+    })
+  })
+
   describe('DELETE /v1/tags/:id', () => {
 
   })

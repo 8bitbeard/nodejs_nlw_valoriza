@@ -7,6 +7,7 @@ import { UsersRepositories } from "../../repositories/UsersRepositories";
 import { TagsRepositories } from "../../repositories/TagsRepositories";
 import { ComplimentsService } from "../../services/ComplimentsService";
 import { TagsService } from "../../services/TagsService";
+import { updateObjectBindingPattern } from "typescript";
 
 jest.mock('typeorm', () => ({
   __esModule: true,
@@ -124,6 +125,57 @@ describe('TagsService', () => {
       expect(tags).toStrictEqual([]);
       expect(getCustomRepositoryMock).toBeCalledTimes(1);
       expect(findMock).toBeCalledTimes(1);
+    })
+  })
+
+  describe('update', () => {
+    it('should return an error when trying to update a tag name without informing the new name', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(tagsRepositories);
+      const tagsService = new TagsService();
+      await tagsService.update('123', null).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "Incorrect name!"
+        })
+      })
+    })
+
+    it('should return an error when trying to update a tag name with a new name bigger than 25 chars', async() => {
+      getCustomRepositoryMock.mockReturnValueOnce(tagsRepositories);
+      const tagsService = new TagsService();
+      await tagsService.update('123', 'ASDFGHKDJSKWIEORLDKSSCMVSD').catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "Tag name must have a maximum size of 25 chars!"
+        })
+      })
+    })
+
+    it('should return an error when trying to update an inexistent tag', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(tagsRepositories);
+      const tagsService = new TagsService();
+      findOneMock.mockReturnValueOnce(null);
+      await tagsService.update('123', '123').catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "Tag don't exist!"
+        })
+      })
+    })
+
+    it('should be able to update the name of an existing tag', async() => {
+      getCustomRepositoryMock.mockReturnValueOnce(tagsRepositories);
+      const tagsService = new TagsService();
+      findOneMock.mockReturnValueOnce({
+        id: "8f42f366-a220-45a8-b6cb-c7e94b438866",
+        name: "Optmistic",
+        created_at: "2021-07-10T15:49:25.000Z",
+        updated_at: "2021-07-10T15:49:25.000Z",
+      })
+      updateMock.mockReturnValueOnce(true);
+      await tagsService.update('8f42f366-a220-45a8-b6cb-c7e94b438866', 'NewName');
+      expect(findOneMock).toBeCalledTimes(1);
+      expect(updateMock).toBeCalledTimes(1);
     })
   })
 
