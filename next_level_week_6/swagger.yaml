@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "This is the swagger for the `NLW Valoriza`, an API built on the Next Level Week #06 event. Here you will find all the endpoints created on the mini course, and new ones, added on a improovement of the API"
-  version: "1.1.2"
+  version: "1.2.0"
   title: "NLW Valoriza"
 host: "localhost:3000"
 basePath: "/nlw-valoriza"
@@ -237,11 +237,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/ListTags"
+    put:
+      tags:
+      - "Tags"
+      summary: "Edit an existing tag"
+      description: "This can only be done by the logged in admin user."
+      operationId: "editTag"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
   /v1/tags{id}:
     delete:
       tags:
       - "Tags"
-      summary: "Create a new tag"
+      summary: "Delete an existing tag"
       description: "This can only be done by the logged in user."
       operationId: "deleteTag"
       produces:
@@ -286,6 +303,34 @@ paths:
           description: "Successful operation"
           schema:
             $ref: "#/definitions/CreateCompliment"
+    patch:
+      tags:
+        - "Compliments"
+      summary: "Edit the message of an existing compliment"
+      description: "This can only be done by the logged in compliment owner."
+      operationId: "editCompliment"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Ex: Bearer **eyJhbGciOiJSUzUxMiIsI...**"
+          required: true
+          type: "string"
+        - name: "complimentId"
+          in: "header"
+          description: "Ex: **5cd0f878-917a-4335-9322-2bbd5b665f64**"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "New tag object"
+          required: true
+          schema:
+            $ref: "#/definitions/EditCompliment"
+      responses:
+        "200":
+          description: "Sucessful operation"
   /v1/compliments/{id}:
     delete:
       tags:
@@ -475,6 +520,14 @@ definitions:
         example: "2021-06-23T09:31:50.000Z"
     xml:
       name: "CreateTags"
+  EditCompliment:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "You are fenomenal!"
+    xml:
+      name: "EditCompliment"
   Compliments:
     type: "object"
     properties:
