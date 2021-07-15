@@ -61,12 +61,10 @@ class TagsService {
       throw new Error("Tag don't exist!");
     }
 
-    const newTagData = {
-      ...tag,
-      name: name
-    }
-
-    await tagsRepositories.update({ id }, newTagData);
+    await tagsRepositories.save({
+      id,
+      name
+    });
   }
 }
 

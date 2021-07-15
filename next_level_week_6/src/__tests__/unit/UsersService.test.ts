@@ -353,7 +353,7 @@ describe('UsersService', () => {
       findOneMock.mockReturnValue(userData);
       await usersService.edit({id: userData.id, name: "Wilton2"})
       expect(getCustomRepository).toBeCalledTimes(1);
-      expect(updateMock).toBeCalledTimes(1);
+      expect(saveMock).toBeCalledTimes(1);
     })
 
     it('should be able to edit the email of an existing user', async () => {
@@ -368,7 +368,7 @@ describe('UsersService', () => {
       findOneMock.mockReturnValue(userData);
       await usersService.edit({id: userData.id, email: "wilton2@example.com"})
       expect(getCustomRepository).toBeCalledTimes(1);
-      expect(updateMock).toBeCalledTimes(1);
+      expect(saveMock).toBeCalledTimes(1);
     })
 
     it('should be able to edit the admin value of an existing user', async () => {
@@ -383,7 +383,7 @@ describe('UsersService', () => {
       findOneMock.mockReturnValue(userData);
       await usersService.edit({id: userData.id, admin: true})
       expect(getCustomRepository).toBeCalledTimes(1);
-      expect(updateMock).toBeCalledTimes(1);
+      expect(saveMock).toBeCalledTimes(1);
     })
   })
 
@@ -553,7 +553,7 @@ describe('UsersService', () => {
       await usersService.update(passwordData)
       expect(getCustomRepository).toBeCalledTimes(1);
       expect(findOneMock).toBeCalledTimes(1);
-      expect(updateMock).toBeCalledTimes(1);
+      expect(saveMock).toBeCalledTimes(1);
     })
   })
 })

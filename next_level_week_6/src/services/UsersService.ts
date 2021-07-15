@@ -105,13 +105,13 @@ class UsersService {
     }
 
     const newUserData: IUserEdit = {
-        ...currentUserData,
+        id: currentUserData.id,
         name: name || currentUserData.name,
         email: email || currentUserData.email,
         admin: admin || currentUserData.admin
     }
 
-    await usersRepositories.update({ id }, newUserData);
+    await usersRepositories.save(newUserData);
   }
 
   async remove(admin_id: string, user_id: string) {
@@ -158,12 +158,10 @@ class UsersService {
 
     const passwordHash = await hash(password, 8)
 
-    const newUserData = {
-      ...currentUserData,
+    await usersRepositories.save({
+      id,
       password: passwordHash
-    }
-
-    await usersRepositories.update({ id }, newUserData);
+    });
   }
 }
 

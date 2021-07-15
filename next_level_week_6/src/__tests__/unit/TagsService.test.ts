@@ -175,7 +175,7 @@ describe('TagsService', () => {
       updateMock.mockReturnValueOnce(true);
       await tagsService.update('8f42f366-a220-45a8-b6cb-c7e94b438866', 'NewName');
       expect(findOneMock).toBeCalledTimes(1);
-      expect(updateMock).toBeCalledTimes(1);
+      expect(saveMock).toBeCalledTimes(1);
     })
   })
 
