@@ -66,6 +66,18 @@ class TagsService {
       name
     });
   }
+
+  async remove(id: string) {
+    const tagsRepositories = getCustomRepository(TagsRepositories);
+
+    const tag = await tagsRepositories.findOne(id);
+
+    if(!tag) {
+      throw new Error("Tag not found!");
+    }
+
+    await tagsRepositories.delete(id);
+  }
 }
 
 export { TagsService }

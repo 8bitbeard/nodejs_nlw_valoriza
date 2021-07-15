@@ -22,7 +22,8 @@ export class CreateCompliments1624526907212 implements MigrationInterface {
                     },
                     {
                         name: "tag_id",
-                        type: "uuid"
+                        type: "uuid",
+                        isNullable: true
                     },
                     {
                         name: "message",
@@ -56,8 +57,8 @@ export class CreateCompliments1624526907212 implements MigrationInterface {
                         referencedTableName: "tags",
                         referencedColumnNames: ["id"],
                         columnNames: ["tag_id"],
-                        onDelete: "SET NULL",
-                        onUpdate: "SET NULL"
+                        onDelete: "CASCADE",
+                        onUpdate: "CASCADE"
                     }
                 ]
             })

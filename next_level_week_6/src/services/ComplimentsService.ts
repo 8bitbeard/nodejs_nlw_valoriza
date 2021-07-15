@@ -21,6 +21,10 @@ class ComplimentsService {
 
     async searchBySender(user_id: string) {
         const compliments = await this.complimentsRepositories.find({
+          // where: {
+          //   user_sender: user_id,
+          // },
+          // relations: ["userSender", "userReceiver", "tag"]
           user_sender: user_id
         })
 

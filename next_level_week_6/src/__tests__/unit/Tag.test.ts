@@ -1,5 +1,6 @@
 import { createConnection, getConnection, Entity, getRepository } from "typeorm";
 import { Tag } from "../../entities/Tag";
+import { Compliment } from "../../entities/Compliment";
 import { classToPlain } from "class-transformer";
 
 
@@ -8,7 +9,7 @@ beforeEach(() => {
     type: 'sqlite',
     database: ":memory:",
     dropSchema: true,
-    entities: [Tag],
+    entities: [Tag, Compliment],
     synchronize: true,
     logging: false
   });

@@ -3,7 +3,7 @@ import { getConnection } from 'typeorm';
 import { app } from '../../app';
 import createConnection from "../../database";
 
-describe('User', () => {
+describe('Tags', () => {
 
   beforeEach(async() => {
     const connection = await createConnection();
@@ -386,6 +386,127 @@ describe('User', () => {
   })
 
   describe('DELETE /v1/tags/:id', () => {
+    it('should not be able to delete a tag without beign authenticated', async () => {
+      const response = await request(app).delete('/nlw-valoriza/v1/tags/123').send();
 
+      expect(response.status).toBe(401);
+    })
+
+    it('should not be able to delete a tag authenticated with a normal user', async () => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234'
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const response = await request(app).delete('/nlw-valoriza/v1/tags/123').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      )
+
+      expect(response.status).toBe(401);
+    })
+
+    it('should not be able to delete an inexistent tag', async () => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const response = await request(app).delete('/nlw-valoriza/v1/tags/123').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      )
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "Tag not found!"
+      })
+    })
+
+    it('should be able to delete an existing tag authenticated with an admin user', async () => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const createdTag = await request(app).post('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        name: "Optmistic!"
+      })
+
+      const response = await request(app).delete(`/nlw-valoriza/v1/tags/${createdTag.body.id}`).set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send()
+
+      expect(response.status).toBe(204);
+    })
+
+    it('should be able to delete all compliments from a deleted tag', async () => {
+      const userData = {
+        name: 'User',
+        email: 'user@user.com',
+        password: '1234',
+        admin: true
+      }
+      const normalData = {
+        name: 'Normal',
+        email: 'normal@user.com',
+        password: '1234'
+      }
+      await request(app).post('/nlw-valoriza/v1/users').send(userData)
+      const normalUser = await request(app).post('/nlw-valoriza/v1/users').send(normalData)
+
+      const tokenData = await request(app).post('/nlw-valoriza/v1/login').send({
+        email: userData.email,
+        password: userData.password
+      })
+
+      const createdTag = await request(app).post('/nlw-valoriza/v1/tags').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        name: "Optmistic!"
+      })
+
+      await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send({
+        tag_id: createdTag.body.id,
+        user_receiver: normalUser.body.id,
+        message: "Compliment Message"
+      })
+
+      const deleteResponse = await request(app).delete(`/nlw-valoriza/v1/tags/${createdTag.body.id}`).set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send()
+
+      const getResponse = await request(app).get('/nlw-valoriza/v1/compliments/sent').set(
+        'Authorization', `Bearer ${tokenData.body.access_token}`
+      ).send()
+
+      expect(deleteResponse.status).toBe(204);
+      expect(getResponse.body).toStrictEqual([]);
+    })
   })
 })

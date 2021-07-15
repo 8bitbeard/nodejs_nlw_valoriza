@@ -20,6 +20,7 @@ jest.mock('typeorm', () => ({
   Entity: jest.fn(),
   EntityRepository: jest.fn(),
   Repository: jest.fn(),
+  OneToMany: jest.fn()
 }));
 
 describe('ComplimentsService', () => {

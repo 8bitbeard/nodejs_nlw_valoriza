@@ -26,9 +26,9 @@ class Compliment {
   @Column()
   tag_id: string;
 
-  // @JoinColumn({name: "tag_id"})
-  // @ManyToOne(() => Tag)
-  // tag: Tag;
+  @JoinColumn({name: "tag_id"})
+  @ManyToOne(() => Tag, (tag) => tag.id, { onDelete: 'CASCADE' })
+  tag: Tag;
 
   @Column()
   message: string;

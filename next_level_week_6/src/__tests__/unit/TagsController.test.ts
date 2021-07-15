@@ -8,11 +8,13 @@ describe('TagsController', () =>{
   const createMock = jest.fn();
   const searchMock = jest.fn();
   const updateMock = jest.fn();
+  const removeMock = jest.fn();
 
   beforeAll(() => {
     TagsService.prototype.create = createMock;
     TagsService.prototype.search = searchMock;
     TagsService.prototype.update = updateMock;
+    TagsService.prototype.remove = removeMock;
   })
 
   describe('create', () => {
@@ -117,6 +119,32 @@ describe('TagsController', () =>{
   })
 
   describe('remove', () => {
+    const mockRequest: any = {
+      params: {
+        id: '123'
+      }
+    }
 
+    const mockResponse: any = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    }
+
+    it('should return an error with status 400', async () => {
+      removeMock.mockRejectedValueOnce(new Error());
+      const tagsController = new TagsController();
+      await tagsController.remove(mockRequest, mockResponse).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+      })
+      expect(removeMock).toBeCalledTimes(1)
+    })
+
+    it('should remove an tag successfully', async () => {
+      removeMock.mockResolvedValueOnce(true);
+      const tagsController = new TagsController();
+      await tagsController.remove(mockRequest, mockResponse);
+      expect(mockResponse.status).toBeCalledWith(204);
+      expect(mockResponse.json).toBeCalledWith()
+    })
   })
 })

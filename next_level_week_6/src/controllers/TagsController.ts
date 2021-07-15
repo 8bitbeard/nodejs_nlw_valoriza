@@ -29,6 +29,15 @@ class TagsController {
 
     return response.status(204).json();
   }
+
+  async remove(request: Request, response: Response) {
+    const { id } = request.params
+    const tagsService = new TagsService();
+
+    await tagsService.remove(id);
+
+    return response.status(204).json();
+  }
 }
 
 export { TagsController }

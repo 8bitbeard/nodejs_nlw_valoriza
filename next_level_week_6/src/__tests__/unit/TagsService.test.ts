@@ -7,7 +7,6 @@ import { UsersRepositories } from "../../repositories/UsersRepositories";
 import { TagsRepositories } from "../../repositories/TagsRepositories";
 import { ComplimentsService } from "../../services/ComplimentsService";
 import { TagsService } from "../../services/TagsService";
-import { updateObjectBindingPattern } from "typescript";
 
 jest.mock('typeorm', () => ({
   __esModule: true,
@@ -22,6 +21,7 @@ jest.mock('typeorm', () => ({
   Entity: jest.fn(),
   EntityRepository: jest.fn(),
   Repository: jest.fn(),
+  OneToMany: jest.fn()
 }));
 
 describe('TagsService', () => {
@@ -180,6 +180,27 @@ describe('TagsService', () => {
   })
 
   describe('remove', () => {
+    it('should not be able to remove an inexistent tag', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(tagsRepositories);
+      const tagsService = new TagsService();
+      findOneMock.mockReturnValueOnce(null);
+      await tagsService.remove('123').catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "Tag not found!"
+        })
+      })
+      expect(findOneMock).toBeCalledTimes(1);
+    })
 
+    it('should be able to remove a tag successfully', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(tagsRepositories);
+      const tagsService = new TagsService();
+      findOneMock.mockReturnValueOnce(true);
+      deleteMock.mockReturnValueOnce(true);
+      await tagsService.remove('123');
+      expect(findOneMock).toBeCalledTimes(1);
+      expect(deleteMock).toBeCalledTimes(1);
+    })
   })
 })

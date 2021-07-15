@@ -3,7 +3,7 @@ import { getConnection } from 'typeorm';
 import { app } from '../../app';
 import createConnection from "../../database";
 
-describe('User', () => {
+describe('Users', () => {
   beforeEach(async() => {
     const connection = await createConnection();
 
