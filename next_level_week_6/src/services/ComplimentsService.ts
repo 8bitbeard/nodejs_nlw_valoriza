@@ -67,6 +67,29 @@ class ComplimentsService {
         return compliment;
     }
 
+    async updateMessage(user_id: string, compliment_id: string, message: string) {
+      const compliment = await this.complimentsRepositories.findOne({
+        id: compliment_id
+      })
+
+      if(!compliment) {
+        throw new Error("Compliment not found!")
+      }
+
+      if(compliment.user_sender != user_id) {
+        throw new Error("Only the compliment owner can change its message!")
+      }
+
+      if(!message) {
+        throw new Error("The informed message is invalid")
+      }
+
+      await this.complimentsRepositories.save({
+        id: compliment_id,
+        message: message
+       });
+    }
+
     async remove(user_sender: string, compliment_id: string) {
     const compliment = await this.complimentsRepositories.findOne({
         id: compliment_id,

@@ -79,6 +79,84 @@ describe('ComplimentsService', () => {
     })
   })
 
+  describe('updateMessage', () => {
+    beforeEach(async () => {
+      jest.resetAllMocks();
+    })
+
+    it('should return an error when no compliments is found with given id', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(complimentsRepositories);
+      const complimentsService = new ComplimentsService();
+      findOneMock.mockReturnValueOnce(null);
+      await complimentsService.updateMessage('123', '123', 'message').catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "Compliment not found!"
+        })
+      })
+      expect(getCustomRepositoryMock).toBeCalledTimes(1);
+      expect(findOneMock).toBeCalledTimes(1);
+    })
+
+    it('should return an error when an user tries to edit a compliment that he did not create', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(complimentsRepositories);
+      const complimentsService = new ComplimentsService();
+      findOneMock.mockReturnValueOnce({
+        id: "507c663c-e971-4b99-a485-b3f0db501893",
+        user_sender: "453eea87-7416-40f4-9e37-e064e5fed963",
+        user_receiver: "ce1c54f7-7c90-456f-ba55-5fbcbdc86f0a",
+        tag_id: "8f42f366-a220-45a8-b6cb-c7e94b438866",
+        message: "Changing the compliments message2!",
+        created_at: "2021-07-11T20:43:30.000Z"
+      })
+      await complimentsService.updateMessage('123', '123', 'message').catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "Only the compliment owner can change its message!"
+        })
+      })
+      expect(getCustomRepositoryMock).toBeCalledTimes(1);
+      expect(findOneMock).toBeCalledTimes(1);
+    })
+
+    it('should return an error when trying to edit a compliment without sendid a message', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(complimentsRepositories);
+      const complimentsService = new ComplimentsService();
+      findOneMock.mockReturnValueOnce({
+        id: "507c663c-e971-4b99-a485-b3f0db501893",
+        user_sender: "453eea87-7416-40f4-9e37-e064e5fed963",
+        user_receiver: "ce1c54f7-7c90-456f-ba55-5fbcbdc86f0a",
+        tag_id: "8f42f366-a220-45a8-b6cb-c7e94b438866",
+        message: "Changing the compliments message2!",
+        created_at: "2021-07-11T20:43:30.000Z"
+      })
+      await complimentsService.updateMessage('453eea87-7416-40f4-9e37-e064e5fed963', '123', null).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toMatchObject({
+          message: "The informed message is invalid"
+        })
+      })
+    })
+
+    it('should be able to edit an existing compliment', async () => {
+      getCustomRepositoryMock.mockReturnValueOnce(complimentsRepositories);
+      const complimentsService = new ComplimentsService();
+      findOneMock.mockReturnValueOnce({
+        id: "507c663c-e971-4b99-a485-b3f0db501893",
+        user_sender: "453eea87-7416-40f4-9e37-e064e5fed963",
+        user_receiver: "ce1c54f7-7c90-456f-ba55-5fbcbdc86f0a",
+        tag_id: "8f42f366-a220-45a8-b6cb-c7e94b438866",
+        message: "Changing the compliments message2!",
+        created_at: "2021-07-11T20:43:30.000Z"
+      })
+      saveMock.mockReturnValueOnce(true)
+      await complimentsService.updateMessage('453eea87-7416-40f4-9e37-e064e5fed963', '123', 'Message');
+      expect(getCustomRepositoryMock).toBeCalledTimes(1);
+      expect(findOneMock).toBeCalledTimes(1);
+      expect(saveMock).toBeCalledTimes(1);
+    })
+  })
+
   describe('create', () => {
 
     beforeEach(async () => {

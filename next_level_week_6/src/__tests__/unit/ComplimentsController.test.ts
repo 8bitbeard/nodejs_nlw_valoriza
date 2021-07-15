@@ -6,12 +6,14 @@ jest.mock("../../services/ComplimentsService");
 describe('ComplimentsController', () => {
   const searchBySenderMock = jest.fn();
   const searchByReceiverMock = jest.fn();
+  const updateMessageMock = jest.fn();
   const createMock = jest.fn();
   const removeMock = jest.fn();
 
   beforeAll(() => {
     ComplimentsService.prototype.searchBySender = searchBySenderMock;
     ComplimentsService.prototype.searchByReceiver = searchByReceiverMock;
+    ComplimentsService.prototype.updateMessage = updateMessageMock;
     ComplimentsService.prototype.create = createMock;
     ComplimentsService.prototype.remove = removeMock;
   })
@@ -97,6 +99,41 @@ describe('ComplimentsController', () => {
       expect(searchByReceiverMock).toBeCalledTimes(1);
       expect(mockResponse.status).toBeCalledWith(200);
       expect(mockResponse.json).toBeCalledWith(complimentsData)
+    })
+  })
+
+  describe('updateMessage', () => {
+    const mockRequest: any = {
+      body: {
+        message: 'This is a message',
+      },
+      params: {
+        id: '123'
+      },
+      user_id: '123'
+    }
+
+    const mockResponse: any = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    }
+
+    it('should return an error when no compliment is found', async () => {
+      updateMessageMock.mockRejectedValue(new Error());
+      const complimentsController = new ComplimentsController();
+      await complimentsController.updateMessage(mockRequest, mockResponse).catch(error => {
+        expect(error).toBeInstanceOf(Error);
+      });
+      expect(updateMessageMock).toBeCalledTimes(1);
+    })
+
+    it('should be able to update the compliment message value', async () => {
+      updateMessageMock.mockResolvedValue(true);
+      const complimentsController = new ComplimentsController();
+      await complimentsController.updateMessage(mockRequest, mockResponse);
+      expect(updateMessageMock).toBeCalledTimes(1);
+      expect(mockResponse.status).toBeCalledWith(204);
+      expect(mockResponse.json).toBeCalledWith();
     })
   })
 

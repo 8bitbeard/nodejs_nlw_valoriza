@@ -5,8 +5,8 @@ import createConnection from '../../database';
 
 describe('Compliments', () => {
 
-  let userSender: request.Response;
-  let userReceiver: request.Response;
+  let adminUser: request.Response;
+  let normalUser: request.Response;
   let normalTokenResponse: request.Response;
   let adminTokenResponse: request.Response;
   let createdTag: request.Response;
@@ -16,26 +16,26 @@ describe('Compliments', () => {
 
     await connection.runMigrations();
 
-    userSender = await request(app).post('/nlw-valoriza/v1/users').send({
-      name: 'User',
-      email: 'user@user.com',
+    adminUser = await request(app).post('/nlw-valoriza/v1/users').send({
+      name: 'Admin User',
+      email: 'admin_user@user.com',
       password: '1234',
       admin: true
     })
 
-    userReceiver = await request(app).post('/nlw-valoriza/v1/users').send({
-      name: 'Normal',
-      email: 'normal@user.com',
+    normalUser = await request(app).post('/nlw-valoriza/v1/users').send({
+      name: 'Normal User',
+      email: 'normal_user@user.com',
       password: '1234'
     })
 
     adminTokenResponse = await request(app).post('/nlw-valoriza/v1/login').send({
-      email: 'user@user.com',
+      email: 'admin_user@user.com',
       password: '1234'
     })
 
     normalTokenResponse = await request(app).post('/nlw-valoriza/v1/login').send({
-      email: 'user@user.com',
+      email: 'normal_user@user.com',
       password: '1234'
     })
 
@@ -60,14 +60,14 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${adminTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
+        user_receiver: normalUser.body.id,
         message: 'This is a nice compliment'
       })
 
       expect(response.status).toBe(201);
       expect(response.body.id).toBeDefined();
-      expect(response.body.user_sender).toBe(userSender.body.id);
-      expect(response.body.user_receiver).toBe(userReceiver.body.id);
+      expect(response.body.user_sender).toBe(adminUser.body.id);
+      expect(response.body.user_receiver).toBe(normalUser.body.id);
       expect(response.body.tag_id).toBe(createdTag.body.id);
       expect(response.body.message).toBe('This is a nice compliment');
       expect(response.body.created_at).toBeDefined();
@@ -78,14 +78,14 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
+        user_receiver: adminUser.body.id,
         message: 'This is a nice compliment'
       })
 
       expect(response.status).toBe(201);
       expect(response.body.id).toBeDefined();
-      expect(response.body.user_sender).toBe(userSender.body.id);
-      expect(response.body.user_receiver).toBe(userReceiver.body.id);
+      expect(response.body.user_sender).toBe(normalUser.body.id);
+      expect(response.body.user_receiver).toBe(adminUser.body.id);
       expect(response.body.tag_id).toBe(createdTag.body.id);
       expect(response.body.message).toBe('This is a nice compliment');
       expect(response.body.created_at).toBeDefined();
@@ -94,7 +94,7 @@ describe('Compliments', () => {
     it('should not be able to create a compliments without beign logged in', async () => {
       const response = await request(app).post('/nlw-valoriza/v1/compliments').send({
         tag_id: createdTag.body.id,
-        user_receiver: userSender.body.id,
+        user_receiver: normalUser.body.id,
         message: 'This is a nice compliment'
       })
 
@@ -106,7 +106,7 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userSender.body.id,
+        user_receiver: normalUser.body.id,
         message: 'This is a nice compliment'
       })
 
@@ -121,7 +121,7 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: 'inexistent',
-        user_receiver: userReceiver.body.id,
+        user_receiver: adminUser.body.id,
         message: 'This is a nice compliment'
       })
 
@@ -149,14 +149,6 @@ describe('Compliments', () => {
 
   describe('DELETE /v1/compliments/:id', () => {
     it('should not be able to delete a compliment that does not exists', async () => {
-      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
-        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
-      ).send({
-        tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
-        message: 'This is a nice compliment'
-      })
-
       const response = await request(app).delete(`/nlw-valoriza/v1/compliments/inexistent`).set(
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send()
@@ -172,11 +164,11 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
+        user_receiver: adminUser.body.id,
         message: 'This is a nice compliment'
       })
 
-      const response = await request(app).delete(`/nlw-valoriza/v1/compliments/inexistent`).send()
+      const response = await request(app).delete(`/nlw-valoriza/v1/compliments/${createdCompliment.body.id}`).send()
 
       expect(response.status).toBe(401);
     })
@@ -186,7 +178,7 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
+        user_receiver: adminUser.body.id,
         message: 'This is a nice compliment'
       })
 
@@ -198,13 +190,97 @@ describe('Compliments', () => {
     })
   })
 
+  describe('PATCH /v1/compliments/:id/message', () => {
+
+    it('should not be able to update a compliment message without beign authenticated', async () => {
+      const response = await request(app).patch('/nlw-valoriza/v1/compliments/123/message').send({
+        message: 'This is a message'
+      })
+      expect(response.status).toBe(401);
+    })
+
+    it('should not be able to update the message of an inexistent compliment', async () => {
+      const response = await request(app).patch('/nlw-valoriza/v1/compliments/123/message').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
+      ).send({
+        message: "This is a message"
+      })
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "Compliment not found!"
+      })
+    })
+
+    it('should not be able to update the message of a compliment not sent by the authenticated user', async () => {
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
+      ).send({
+        tag_id: createdTag.body.id,
+        user_receiver: adminUser.body.id,
+        message: 'This is a nice compliment'
+      })
+
+      const response = await request(app).patch(`/nlw-valoriza/v1/compliments/${createdCompliment.body.id}/message`).set(
+        'Authorization', `Bearer ${adminTokenResponse.body.access_token}`
+      ).send({
+        message: "This is a message"
+      })
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "Only the compliment owner can change its message!"
+      })
+    })
+
+    it('should not be able to update the message of a compliment without sending a message', async() => {
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
+      ).send({
+        tag_id: createdTag.body.id,
+        user_receiver: adminUser.body.id,
+        message: 'This is a nice compliment'
+      })
+
+      const response = await request(app).patch(`/nlw-valoriza/v1/compliments/${createdCompliment.body.id}/message`).set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
+      ).send({
+        message: ""
+      })
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: "The informed message is invalid"
+      })
+    })
+
+
+    it('should be able to update the message of a compliment when authenticated', async () => {
+      const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
+      ).send({
+        tag_id: createdTag.body.id,
+        user_receiver: adminUser.body.id,
+        message: 'This is a nice compliment'
+      })
+
+      const response = await request(app).patch(`/nlw-valoriza/v1/compliments/${createdCompliment.body.id}/message`).set(
+        'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
+      ).send({
+        message: "Tihs is a message"
+      })
+
+      expect(response.status).toBe(204);
+    })
+  })
+
   describe('GET /v1/compliments/sent', () => {
     it('should be able to return te sent compliment with status 200', async () => {
       const createdCompliment = await request(app).post('/nlw-valoriza/v1/compliments').set(
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
+        user_receiver: adminUser.body.id,
         message: 'This is a nice compliment'
       })
 
@@ -237,7 +313,7 @@ describe('Compliments', () => {
         'Authorization', `Bearer ${normalTokenResponse.body.access_token}`
       ).send({
         tag_id: createdTag.body.id,
-        user_receiver: userReceiver.body.id,
+        user_receiver: adminUser.body.id,
         message: 'This is a nice compliment'
       })
 

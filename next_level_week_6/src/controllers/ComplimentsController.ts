@@ -36,6 +36,17 @@ class ComplimentsController {
         return response.status(201).json(compliment);
     }
 
+    async updateMessage(request: Request, response: Response) {
+      const complimentsService = new ComplimentsService();
+      const { id } = request.params;
+      const { message } = request.body;
+      const { user_id } = request;
+
+      await complimentsService.updateMessage(user_id, id, message);
+
+      return response.status(204).json();
+    }
+
     async remove(request: Request, response: Response) {
         const complimentsService = new ComplimentsService();
         const { id } = request.params;

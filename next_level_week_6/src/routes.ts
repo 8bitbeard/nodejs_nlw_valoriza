@@ -33,6 +33,7 @@ router.put("/v1/tags", ensureAuthenticated, ensureAdmin, tagsController.update);
 // Compliments
 router.post("/v1/compliments", ensureAuthenticated, complimentsController.create)
 router.delete("/v1/compliments/:id", ensureAuthenticated, complimentsController.remove)
+router.patch("/v1/compliments/:id/message", ensureAuthenticated, complimentsController.updateMessage)
 router.get("/v1/compliments/sent", ensureAuthenticated, complimentsController.searchBySender)
 router.get("/v1/compliments/received", ensureAuthenticated, complimentsController.searchByReceiver)
 
