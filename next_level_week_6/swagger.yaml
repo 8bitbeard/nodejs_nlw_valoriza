@@ -258,7 +258,7 @@ paths:
     delete:
       tags:
       - "Tags"
-      summary: "Delete an existing tag"
+      summary: "Delete an existing tag and its compliments"
       description: "This can only be done by the logged in user."
       operationId: "deleteTag"
       produces:
