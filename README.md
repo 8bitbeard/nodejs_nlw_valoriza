@@ -84,4 +84,4 @@
 
 ## Database table diagram:
 
-![Database table diagram](./images/table_diagram.png)
+![Database table diagram](./images/table_diagram_two.png)
